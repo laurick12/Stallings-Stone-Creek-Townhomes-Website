@@ -267,4 +267,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible{
   .platforms, .res-grid{grid-template-columns:1fr;}
   .sponsor__body{flex-direction:column; text-align:center;}
   .sponsor__left{flex-direction:column;}
+.wordmark__name{font-size:1rem; line-height:1.1; white-space:nowrap;}
+  .wordmark__sub{font-size:.62rem;}
+  .wordmark__leaf{font-size:1.3rem;}
 }
