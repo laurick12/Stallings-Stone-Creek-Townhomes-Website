@@ -428,9 +428,15 @@
       var badge = v.tested
         ? '<span class="vend__tag vend__tag--tested">★ Community Tested</span>'
         : '<span class="vend__tag vend__tag--new">Neighbor Lead</span>';
-      var proof = v.tested
-        ? '★ ' + Number(v.rating).toFixed(1) + ' · Vouched for by ' + v.vouches + ' Stone Creek neighbor' + (v.vouches === 1 ? '' : 's')
-        : 'Not yet reviewed — be the first neighbor to vouch';
+      /* Honest stars: a 5.0 from 1 vouch is not a rating yet.
+         Show stars only with 2+ vouches; with 1 vouch show the vouch, no stars. */
+      var proof = !v.tested
+        ? 'Not yet reviewed — be the first neighbor to vouch'
+        : (v.vouches || 0) >= 2
+          ? '★ ' + Number(v.rating).toFixed(1) + ' · Vouched for by ' + v.vouches + ' Stone Creek neighbors'
+          : (v.vouches || 0) === 1
+            ? 'Vouched for by 1 Stone Creek neighbor'
+            : 'Community tested — no reviews yet';
       var telHref = v.phone ? 'tel:' + v.phone.replace(/[^0-9+]/g, "") : "";
       var callBtn = v.phone ? '<a class="vcard__btn vcard__btn--primary" href="' + escapeHtml(telHref) + '">Call ' + escapeHtml(v.phone) + '</a>' : '';
       var webBtn = v.website ? '<a class="vcard__btn" href="' + escapeHtml(v.website) + '" target="_blank" rel="noopener">Website ↗</a>' : '';

@@ -1,8 +1,17 @@
 [
   {
+    "_comment": "READ THIS FIRST - NOT a real announcement. The site ignores any entry without an id and title, so this guide entry never shows as a banner. JSON files cannot have // comments, so notes live in fields starting with _ instead. Full guide: ANNOUNCEMENTS.md in this same folder.",
+    "_to_add": "Copy a real entry below, paste it after the last one (with a comma between entries), then change: id (must be NEW and unique, e.g. 2026-12-water-shutoff), severity, title, details, expiresAt. Commit on GitHub, check the preview link in about 60 seconds.",
+    "_to_remove": "Delete the whole real entry, OR set its expiresAt to a date in the past. Do NOT rely on the X button on the site - that only hides it on one person's phone/computer.",
+    "_severity": "urgent = water shutoff, towing, safety, pavilion closed today. Cannot be fully dismissed - X collapses it to a '1 Urgent Alert' pill. important = annual meeting, dues change, election. info = maintenance next week, new vendor, trash delay. Important/info CAN be dismissed on that device.",
+    "_title": "Keep the title under 80 characters - it is the one line on the banner. Put the full text in details.",
+    "_expiresAt": "Always set one, Eastern time, e.g. 2026-12-31T23:59:59-05:00. After that date/time the banner hides itself automatically.",
+    "_template": "{ \"id\": \"2026-12-your-topic\", \"severity\": \"important\", \"title\": \"Short headline under 80 characters.\", \"details\": \"Full text shown when someone taps Details - one or two sentences, plus what to do.\", \"actionLabel\": \"View Parking Map\", \"actionHref\": \"#guide\", \"expiresAt\": \"2026-12-31T23:59:59-05:00\" }"
+  },
+  {
     "id": "2026-11-winter-irrigation",
     "severity": "important",
-    "title": "Common-area irrigation winterization & mulch refresh scheduled Nov 30 \u2013 Dec 2.",
+    "title": "Common-area irrigation winterization & mulch refresh scheduled Nov 30 – Dec 2.",
     "details": "Landscaping crews will blow out common-area irrigation lines and refresh pine-needle beds along Trout Lily Drive and Autumn Olive Drive between 8:00 AM and 4:00 PM. Please keep alleyways and guest parking aprons clear during work hours.",
     "actionLabel": "View Parking Map",
     "actionHref": "#guide",
