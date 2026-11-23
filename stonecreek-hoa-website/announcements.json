@@ -1,0 +1,20 @@
+[
+  {
+    "id": "2026-11-annual-meeting",
+    "severity": "urgent",
+    "title": "Annual HOA Meeting & Board Elections \u2014 Dec 10 at 6:30 PM (Quorum Needed)",
+    "details": "Quorum is required for our Annual Budget & Board Election meeting. Please log in to CiraNet to submit your electronic proxy or email screekth@ciramail.com before 5:00 PM on December 9 if you cannot attend in person.",
+    "actionLabel": "Open Resident Portal \u2197",
+    "actionHref": "https://resident.ciranet.com/user/login?returnUrl=%2Fhome",
+    "expiresAt": "2026-12-11T00:00:00-05:00"
+  },
+  {
+    "id": "2026-11-winter-irrigation",
+    "severity": "important",
+    "title": "Common-area irrigation winterization & mulch refresh scheduled Nov 30 \u2013 Dec 2.",
+    "details": "Landscaping crews will blow out common-area irrigation lines and refresh pine-needle beds along Trout Lily Drive and Autumn Olive Drive between 8:00 AM and 4:00 PM. Please keep alleyways and guest parking aprons clear during work hours.",
+    "actionLabel": "View Parking Map",
+    "actionHref": "#guide",
+    "expiresAt": "2026-12-31T23:59:59-05:00"
+  }
+]
