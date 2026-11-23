@@ -53,11 +53,11 @@
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
         <a href="#about">About</a>
-        <a href="#guide">Guide</a>
         <a href="#vendors">Vendors</a>
+        <a href="#guide">Guide</a>
         <a href="#resources">Resources</a>
-        <a href="#faq">FAQ</a>
         <a href="#board">Board</a>
+        <a href="#faq">FAQ</a>
         <a class="site-nav__cta" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
       </nav>
     </div>
@@ -171,6 +171,74 @@
         </aside>
       </div>
     </section>
+
+<section class="section" id="vendors" aria-labelledby="vendors-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="section-label">Neighbors' Directory</p>
+          <h2 id="vendors-title">Local &amp; Vetted Vendors</h2>
+          <p>Search pros your Stone Creek neighbors have hired and reviewed — no external spreadsheets required.</p>
+        </div>
+
+        <div class="vendor-controls" aria-label="Filter vendors">
+          <div class="vendor-controls__top">
+            <label class="search-field">
+              <span class="sr-only">Search vendors by name, trade, or keyword</span>
+              <input type="search" id="vendor-search" placeholder="Search plumber, HVAC, EV charger, drywall…" autocomplete="off" />
+            </label>
+
+            <label class="toggle-check">
+              <input type="checkbox" id="vendor-tested-only" />
+              <span>★ Community Tested Only</span>
+            </label>
+
+            <label class="sort-field">
+              <span class="sr-only">Sort vendors</span>
+              <select id="vendor-sort">
+                <option value="vouches">Sort: Most Vouched</option>
+                <option value="rating">Sort: Highest Rated</option>
+                <option value="name">Sort: A – Z</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="pill-row" id="vendor-categories" role="group" aria-label="Filter by trade category">
+            <button type="button" class="pill is-active" data-cat="All">All Trades</button>
+            <button type="button" class="pill" data-cat="HVAC">HVAC</button>
+            <button type="button" class="pill" data-cat="Plumbing">Plumbing</button>
+            <button type="button" class="pill" data-cat="Electrical">Electrical</button>
+            <button type="button" class="pill" data-cat="Handyman">Handyman</button>
+            <button type="button" class="pill" data-cat="Cleaning">Cleaning</button>
+            <button type="button" class="pill" data-cat="Pest Control">Pest Control</button>
+            <button type="button" class="pill" data-cat="Landscaping">Landscaping</button>
+          </div>
+
+          <p class="vendor-count" id="vendor-count" aria-live="polite"></p>
+        </div>
+
+        <div class="vendor-grid" id="vendor-grid"></div>
+
+        <div class="notice">
+          <strong>Used a great local pro or tried one of our Neighbor Leads?</strong>
+          Share a quick review on any vendor card above (or submit a brand-new pro) so neighbors can hire with confidence.
+          <br />
+          <div class="notice__actions">
+            <button type="button" class="btn btn--solid" id="open-new-vendor-btn">+ Recommend a New Vendor</button>
+            <a class="btn btn--ghost" href="https://forms.gle/7eLrH49JHgsBZvjb9" target="_blank" rel="noopener">Google Form Backup ↗</a>
+          </div>
+          <p class="archive-links">
+            Legacy Google Doc archives:
+            <a href="https://docs.google.com/document/d/1HfmQ_FhyghodeeVrdxvfaRZ8DzGl4CHb/edit?usp=sharing" target="_blank" rel="noopener">Recommended List Doc ↗</a> ·
+            <a href="https://docs.google.com/document/d/1SOKejOjc9m6xSPS6DTPztk3d2_LJNiUt/edit?usp=sharing" target="_blank" rel="noopener">Local Support Doc ↗</a>
+          </p>
+        </div>
+
+        <div class="disclaimer" role="note">
+          <p><strong>Disclaimer:</strong> These vendor lists are provided as a courtesy for informational purposes only. The HOA Board does not endorse, guarantee, or assume responsibility for the quality, pricing, or performance of any listed service provider. Residents are encouraged to conduct their own due diligence, obtain multiple quotes, and verify licensing and insurance before hiring.</p>
+        </div>
+      </div>
+    </section>
+
 <section class="section section--tint" id="guide" aria-labelledby="guide-title">
       <div class="wrap">
         <div class="section-head">
@@ -341,72 +409,7 @@
         </div>
       </div>
     </section>
-<section class="section" id="vendors" aria-labelledby="vendors-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Neighbors' Directory</p>
-          <h2 id="vendors-title">Local &amp; Vetted Vendors</h2>
-          <p>Search pros your Stone Creek neighbors have hired and reviewed — no external spreadsheets required.</p>
-        </div>
 
-        <div class="vendor-controls" aria-label="Filter vendors">
-          <div class="vendor-controls__top">
-            <label class="search-field">
-              <span class="sr-only">Search vendors by name, trade, or keyword</span>
-              <input type="search" id="vendor-search" placeholder="Search plumber, HVAC, EV charger, drywall…" autocomplete="off" />
-            </label>
-
-            <label class="toggle-check">
-              <input type="checkbox" id="vendor-tested-only" />
-              <span>★ Community Tested Only</span>
-            </label>
-
-            <label class="sort-field">
-              <span class="sr-only">Sort vendors</span>
-              <select id="vendor-sort">
-                <option value="vouches">Sort: Most Vouched</option>
-                <option value="rating">Sort: Highest Rated</option>
-                <option value="name">Sort: A – Z</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="pill-row" id="vendor-categories" role="group" aria-label="Filter by trade category">
-            <button type="button" class="pill is-active" data-cat="All">All Trades</button>
-            <button type="button" class="pill" data-cat="HVAC">HVAC</button>
-            <button type="button" class="pill" data-cat="Plumbing">Plumbing</button>
-            <button type="button" class="pill" data-cat="Electrical">Electrical</button>
-            <button type="button" class="pill" data-cat="Handyman">Handyman</button>
-            <button type="button" class="pill" data-cat="Cleaning">Cleaning</button>
-            <button type="button" class="pill" data-cat="Pest Control">Pest Control</button>
-            <button type="button" class="pill" data-cat="Landscaping">Landscaping</button>
-          </div>
-
-          <p class="vendor-count" id="vendor-count" aria-live="polite"></p>
-        </div>
-
-        <div class="vendor-grid" id="vendor-grid"></div>
-
-        <div class="notice">
-          <strong>Used a great local pro or tried one of our Neighbor Leads?</strong>
-          Share a quick review on any vendor card above (or submit a brand-new pro) so neighbors can hire with confidence.
-          <br />
-          <div class="notice__actions">
-            <button type="button" class="btn btn--solid" id="open-new-vendor-btn">+ Recommend a New Vendor</button>
-            <a class="btn btn--ghost" href="https://forms.gle/7eLrH49JHgsBZvjb9" target="_blank" rel="noopener">Google Form Backup ↗</a>
-          </div>
-          <p class="archive-links">
-            Legacy Google Doc archives:
-            <a href="https://docs.google.com/document/d/1HfmQ_FhyghodeeVrdxvfaRZ8DzGl4CHb/edit?usp=sharing" target="_blank" rel="noopener">Recommended List Doc ↗</a> ·
-            <a href="https://docs.google.com/document/d/1SOKejOjc9m6xSPS6DTPztk3d2_LJNiUt/edit?usp=sharing" target="_blank" rel="noopener">Local Support Doc ↗</a>
-          </p>
-        </div>
-
-        <div class="disclaimer" role="note">
-          <p><strong>Disclaimer:</strong> These vendor lists are provided as a courtesy for informational purposes only. The HOA Board does not endorse, guarantee, or assume responsibility for the quality, pricing, or performance of any listed service provider. Residents are encouraged to conduct their own due diligence, obtain multiple quotes, and verify licensing and insurance before hiring.</p>
-        </div>
-      </div>
-    </section>
 <section class="section" id="resources" aria-labelledby="res-title">
       <div class="wrap">
         <div class="section-head">
@@ -547,6 +550,36 @@
         </aside>
       </div>
     </section>
+
+<section class="section section--tint" id="board" aria-labelledby="board-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="section-label">Leadership</p>
+          <h2 id="board-title">Meet the Board</h2>
+          <p>Elected neighbors who volunteer their time to serve the Stone Creek community.</p>
+        </div>
+
+        <ol class="roster">
+          <li class="roster__row"><span class="roster__name">Jessica Rubenstein</span><span class="roster__role">President</span></li>
+          <li class="roster__row"><span class="roster__name">Laurick Amadi</span><span class="roster__role">Vice President</span></li>
+          <li class="roster__row"><span class="roster__name">Keianna Glover</span><span class="roster__role">Secretary</span></li>
+        </ol>
+
+        <div class="rule-row"><span>Reach the Board</span></div>
+        <div class="stack-actions">
+          <button type="button" class="btn btn--solid open-feedback-modal-btn">Submit feedback to the Board</button>
+        </div>
+
+        <div class="alert" role="note">
+          <div>
+            <strong>Community concerns:</strong> For rule violations, common-area issues, or formal complaints, contact our management company at
+            <a href="mailto:screekth@ciramail.com">screekth@ciramail.com</a>.
+          </div>
+          <button type="button" class="copy-btn" data-copy="screekth@ciramail.com">Copy email</button>
+        </div>
+      </div>
+    </section>
+
 <section class="section section--tint" id="faq" aria-labelledby="faq-title">
       <div class="wrap">
         <div class="section-head section-head--center">
@@ -573,34 +606,6 @@
           <details class="faq__item"><summary>How do I get involved or join the Board?</summary><div class="faq__answer">Board elections are held at the Annual Meeting each year. Any homeowner in good standing is eligible to run. Submit your interest through the <a href="#" class="open-feedback-modal-btn">Board feedback form</a> — we welcome community involvement!</div></details>
           <details class="faq__item"><summary>What happens if I don’t pay my HOA dues?</summary><div class="faq__answer">Past-due accounts are subject to late fees. Continued delinquency may result in collections and ultimately a lien on your property. If you’re experiencing hardship, contact the management company early to discuss arrangements.</div></details>
           <details class="faq__item"><summary>Where can I find the Master Insurance Policy, CC&amp;Rs, bylaws, and meeting minutes?</summary><div class="faq__answer">All sensitive governing and insurance documents are securely stored in the <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal</a>. Log in and navigate to the Documents section. If you only need a lender Certificate of Insurance (COI), see the quick instructions in <a href="#resources">Community Resources</a>.</div></details>
-        </div>
-      </div>
-    </section>
-<section class="section section--tint" id="board" aria-labelledby="board-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Leadership</p>
-          <h2 id="board-title">Meet the Board</h2>
-          <p>Elected neighbors who volunteer their time to serve the Stone Creek community.</p>
-        </div>
-
-        <ol class="roster">
-          <li class="roster__row"><span class="roster__name">Jessica Rubenstein</span><span class="roster__role">President</span></li>
-          <li class="roster__row"><span class="roster__name">Laurick Amadi</span><span class="roster__role">Vice President</span></li>
-          <li class="roster__row"><span class="roster__name">Keianna Glover</span><span class="roster__role">Secretary</span></li>
-        </ol>
-
-        <div class="rule-row"><span>Reach the Board</span></div>
-        <div class="stack-actions">
-          <button type="button" class="btn btn--solid open-feedback-modal-btn">Submit feedback to the Board</button>
-        </div>
-
-        <div class="alert" role="note">
-          <div>
-            <strong>Community concerns:</strong> For rule violations, common-area issues, or formal complaints, contact our management company at
-            <a href="mailto:screekth@ciramail.com">screekth@ciramail.com</a>.
-          </div>
-          <button type="button" class="copy-btn" data-copy="screekth@ciramail.com">Copy email</button>
         </div>
       </div>
     </section>
@@ -632,11 +637,11 @@
         </div>
         <nav class="foot__links" aria-label="Footer">
           <a href="#about">About</a>
-          <a href="#guide">Guide</a>
           <a href="#vendors">Vendors</a>
+          <a href="#guide">Guide</a>
           <a href="#resources">Resources</a>
-          <a href="#faq">FAQ</a>
           <a href="#board">Board</a>
+          <a href="#faq">FAQ</a>
           <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
         </nav>
       </div>
