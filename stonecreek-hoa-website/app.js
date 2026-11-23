@@ -668,13 +668,16 @@
       var fd = new FormData(bookingForm);
       var statusEl = document.getElementById("booking-status");
       var payload = {
+        form: "pavilion",
         date: fd.get("date"),
         slot: fd.get("slot"),
         residentName: fd.get("residentName"),
         unitAddress: fd.get("unitAddress"),
         residentEmail: fd.get("residentEmail"),
+        residentPhone: fd.get("residentPhone"),
         eventDetails: fd.get("eventDetails"),
-        rulesAccepted: true
+        rulesAccepted: true,
+        submittedAt: new Date().toISOString()
       };
 
       if (CONFIG.pavilionWebhookUrl) {
@@ -684,7 +687,8 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         })
-          .then(function () {
+          .then(function (res) {
+            if (!res.ok) throw new Error("webhook " + res.status);
             statusEl.textContent = "Request received! Check your email shortly for automated confirmation.";
             bookingForm.reset();
           })
@@ -754,6 +758,7 @@
       var fd = new FormData(form);
       var statusEl = document.getElementById("feedback-status");
       var payload = {
+        form: "board-feedback",
         residentName: fd.get("residentName"),
         unitAddress: fd.get("unitAddress"),
         residentEmail: fd.get("residentEmail"),
@@ -769,7 +774,8 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         })
-        .then(function () {
+        .then(function (res) {
+          if (!res.ok) throw new Error("webhook " + res.status);
           statusEl.textContent = "Message sent successfully!";
           form.reset();
           setTimeout(function() { modal.close(); }, 1500);
