@@ -13,7 +13,10 @@
   };
 
   /* Embedded fallback data so local file:// preview works without CORS issues */
-  var FALLBACK_ANNOUNCEMENTS = [{"id": "2026-11-annual-meeting", "severity": "urgent", "title": "Annual HOA Meeting & Board Elections \u2014 Dec 10 at 6:30 PM (Quorum Needed)", "details": "Quorum is required for our Annual Budget & Board Election meeting. Please log in to CiraNet to submit your electronic proxy or email screekth@ciramail.com before 5:00 PM on December 9 if you cannot attend in person.", "actionLabel": "Open Resident Portal \u2197", "actionHref": "https://resident.ciranet.com/user/login?returnUrl=%2Fhome", "expiresAt": "2026-12-11T00:00:00-05:00"}, {"id": "2026-11-winter-irrigation", "severity": "important", "title": "Common-area irrigation winterization & mulch refresh scheduled Nov 30 \u2013 Dec 2.", "details": "Landscaping crews will blow out common-area irrigation lines and refresh pine-needle beds along Trout Lily Drive and Autumn Olive Drive between 8:00 AM and 4:00 PM. Please keep alleyways and guest parking aprons clear during work hours.", "actionLabel": "View Parking Map", "actionHref": "#guide", "expiresAt": "2026-12-31T23:59:59-05:00"}];
+  /* Announcements: announcements.json is the single source of truth.
+     No hardcoded fallback — if the JSON cannot be fetched, show no banner
+     rather than a stale meeting. See ANNOUNCEMENTS.md to add/remove. */
+  var FALLBACK_ANNOUNCEMENTS = [];
   var FALLBACK_VENDORS = [{"id": "yuri-handyman", "name": "Yuri Handyman", "category": "Handyman", "tested": true, "rating": 5.0, "vouches": 1, "phone": "(732) 268-9521", "website": "", "summary": "Community member recommended handyman services.", "verifiedNotes": "Recommended List", "reviews": []}, {"id": "white-electric", "name": "White Electric Company", "category": "Electrical", "tested": true, "rating": 5.0, "vouches": 1, "phone": "(704) 594-4612", "website": "https://whiteelectriccompany.com", "summary": "EV Charger Installation.", "verifiedNotes": "Recommended List", "reviews": []}, {"id": "brewer-mechanical", "name": "Brewer Mechanical", "category": "HVAC", "tested": true, "rating": 5.0, "vouches": 1, "phone": "(704) 792-5588", "website": "", "summary": "Heat and AC Repair.", "verifiedNotes": "Recommended List \u00b7 Contact: Andy Brewer (Breuermec.hvac@gmail.com)", "reviews": []}, {"id": "tactical-pest", "name": "Tactical Pest & Termite Solutions", "category": "Pest Control", "tested": true, "rating": 5.0, "vouches": 1, "phone": "(704) 954-8455", "website": "https://tactical-pest.com", "summary": "Pest Control Services \u2013 Mint Hill, NC.", "verifiedNotes": "Recommended List \u00b7 Contact: Gary Wojciechowicz (info@tactical-pest.com)", "reviews": []}, {"id": "blue-cedar-residential", "name": "Blue Cedar Residential", "category": "Handyman", "tested": false, "rating": 0, "vouches": 0, "phone": "(980) 833-5454", "website": "", "summary": "Handyman / Locksmith services.", "verifiedNotes": "Local Support List (Unvetted) \u00b7 Contact: Jon Cannup (Bluecedarresidential@gmail.com)", "reviews": []}, {"id": "cottagecare-charlotte", "name": "CottageCare of Charlotte", "category": "Cleaning", "tested": false, "rating": 0, "vouches": 0, "phone": "(704) 847-8660", "website": "", "summary": "House Cleaning in Charlotte, NC.", "verifiedNotes": "Local Support List (Unvetted) \u00b7 Contact: Adam Strader", "reviews": []}, {"id": "queenbees-pest", "name": "QueenBee's Pest Solutions", "category": "Pest Control", "tested": false, "rating": 0, "vouches": 0, "phone": "(980) 414-2819", "website": "", "summary": "Pest control solutions.", "verifiedNotes": "Local Support List (Unvetted) \u00b7 Contact: Keenan (queenbeespest@gmail.com)", "reviews": []}, {"id": "sparkle-squad", "name": "Sparkle Squad", "category": "Cleaning", "tested": false, "rating": 0, "vouches": 0, "phone": "(704) 593-9559", "website": "", "summary": "Professional Window Cleaning and Pressure Washing Services.", "verifiedNotes": "Local Support List (Unvetted)", "reviews": []}];
 
   /* ------------------------------------------------------------
@@ -70,43 +73,89 @@
      3. Top Announcement Banner (Urgent vs Important + Expiration)
      ------------------------------------------------------------ */
   var DISMISSED_KEY = "sc_dismissed_alerts_v1";
-  function getDismissed() {
-    try { return JSON.parse(localStorage.getItem(DISMISSED_KEY) || "[]"); }
+  var COLLAPSED_KEY = "sc_collapsed_urgent_v1";
+  function getList(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "[]"); }
     catch (e) { return []; }
   }
-  function saveDismissed(id) {
+  function saveToList(key, id) {
     try {
-      var list = getDismissed();
+      var list = getList(key);
       if (list.indexOf(id) === -1) list.push(id);
-      localStorage.setItem(DISMISSED_KEY, JSON.stringify(list));
+      localStorage.setItem(key, JSON.stringify(list));
     } catch (e) {}
   }
+  function removeFromList(key, id) {
+    try {
+      var list = getList(key).filter(function (x) { return x !== id; });
+      localStorage.setItem(key, JSON.stringify(list));
+    } catch (e) {}
+  }
+  function getDismissed() { return getList(DISMISSED_KEY); }
+  function saveDismissed(id) { saveToList(DISMISSED_KEY, id); }
+
+  var SEVERITY_RANK = { urgent: 0, important: 1, info: 2 };
+  var SEVERITY_LABEL = { urgent: "Urgent", important: "Important", info: "Info" };
 
   function initBanner(items) {
     var banner = document.getElementById("site-banner");
+    var pill = document.getElementById("urgent-pill");
     if (!banner || !Array.isArray(items)) return;
 
     var now = Date.now();
     var dismissed = getDismissed();
+    var collapsed = getList(COLLAPSED_KEY);
     var active = items.filter(function (a) {
+      if (!a || !a.id || !a.title) return false;
       if (a.expiresAt && Date.parse(a.expiresAt) < now) return false;
       if (a.severity !== "urgent" && dismissed.indexOf(a.id) !== -1) return false;
       return true;
     });
 
-    if (!active.length) return;
-    /* Prioritize urgent notices first */
+    if (!active.length) {
+      banner.hidden = true;
+      if (pill) pill.hidden = true;
+      return;
+    }
+    /* Highest severity first, then soonest to expire */
     active.sort(function (a, b) {
-      return (b.severity === "urgent" ? 1 : 0) - (a.severity === "urgent" ? 1 : 0);
+      var ra = SEVERITY_RANK[a.severity] == null ? 1 : SEVERITY_RANK[a.severity];
+      var rb = SEVERITY_RANK[b.severity] == null ? 1 : SEVERITY_RANK[b.severity];
+      if (ra !== rb) return ra - rb;
+      return (Date.parse(a.expiresAt || "9999") || 0) - (Date.parse(b.expiresAt || "9999") || 0);
     });
 
     var current = active[0];
-    var isUrgent = current.severity === "urgent";
-    banner.dataset.severity = isUrgent ? "urgent" : "important";
-    document.getElementById("banner-badge").textContent = isUrgent ? "Urgent" : "Important";
-    document.getElementById("banner-text").textContent = current.title;
+    var severity = SEVERITY_RANK[current.severity] == null ? "important" : current.severity;
+    var isUrgent = severity === "urgent";
+    var label = SEVERITY_LABEL[severity] || "Important";
+
+    /* Urgent collapsed to a pill in the sticky header — not dismissed.
+       It returns as a full banner on the next page load until removed or expired. */
+    if (isUrgent && collapsed.indexOf(current.id) !== -1) {
+      banner.hidden = true;
+      if (pill) {
+        document.getElementById("urgent-pill-text").textContent = "1 Urgent Alert";
+        pill.hidden = false;
+        pill.onclick = function () {
+          removeFromList(COLLAPSED_KEY, current.id);
+          pill.hidden = true;
+          banner.hidden = false;
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+      }
+      return;
+    }
+    if (pill) pill.hidden = true;
+
+    banner.dataset.severity = severity;
+    document.getElementById("banner-badge").textContent = label;
+    document.getElementById("banner-text").textContent =
+      current.title + (active.length > 1 ? "  (" + active.length + " notices)" : "");
 
     var linkEl = document.getElementById("banner-link");
+    linkEl.hidden = true;
+    linkEl.removeAttribute("target");
     if (current.actionHref && current.actionLabel) {
       linkEl.href = current.actionHref;
       linkEl.textContent = current.actionLabel;
@@ -114,28 +163,37 @@
       if (/^https?:/.test(current.actionHref)) {
         linkEl.target = "_blank";
         linkEl.rel = "noopener";
-      } else {
-        linkEl.removeAttribute("target");
       }
     }
 
     var closeBtn = document.getElementById("banner-close-btn");
-    if (isUrgent) {
-      closeBtn.hidden = true;
-    } else {
-      closeBtn.hidden = false;
-      closeBtn.onclick = function () {
+    closeBtn.hidden = false;
+    closeBtn.setAttribute("aria-label", isUrgent ? "Hide urgent alert (shows as a pill)" : "Dismiss announcement");
+    closeBtn.onclick = function () {
+      if (isUrgent) {
+        saveToList(COLLAPSED_KEY, current.id);
+        banner.hidden = true;
+        if (pill) {
+          document.getElementById("urgent-pill-text").textContent = "1 Urgent Alert";
+          pill.hidden = false;
+          pill.onclick = function () {
+            removeFromList(COLLAPSED_KEY, current.id);
+            pill.hidden = true;
+            banner.hidden = false;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        }
+      } else {
         saveDismissed(current.id);
         banner.hidden = true;
-        syncHeaderHeight();
-      };
-    }
+      }
+    };
 
     var detailsBtn = document.getElementById("banner-details-btn");
     var alertModal = document.getElementById("alert-modal");
     if (detailsBtn && alertModal) {
       detailsBtn.onclick = function () {
-        document.getElementById("alert-modal-badge").textContent = isUrgent ? "Urgent Alert" : "Community Notice";
+        document.getElementById("alert-modal-badge").textContent = label + (isUrgent ? " Alert" : " Notice");
         document.getElementById("alert-modal-title").textContent = current.title;
         document.getElementById("alert-modal-body").textContent = current.details || current.title;
         var modalCta = document.getElementById("alert-modal-cta");
@@ -151,8 +209,8 @@
     }
 
     banner.hidden = false;
-    syncHeaderHeight();
   }
+
 
   /* ------------------------------------------------------------
      4. New-Neighbor 30-Day Checklist (Behavioral Gamification)
@@ -728,12 +786,12 @@
 /* ------------------------------------------------------------
      10. Load JSON Feeds (with local file:// fallback)
      ------------------------------------------------------------ */
-  fetch("announcements.json")
-    .then(function (r) { return r.ok ? r.json() : FALLBACK_ANNOUNCEMENTS; })
+  fetch("announcements.json", { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.json() : []; })
     .then(initBanner)
-    .catch(function () { initBanner(FALLBACK_ANNOUNCEMENTS); });
+    .catch(function () { initBanner([]); });
 
-  fetch("vendors.json")
+  fetch("vendors.json", { cache: "no-store" })
     .then(function (r) { return r.ok ? r.json() : FALLBACK_VENDORS; })
     .then(initVendors)
     .catch(function () { initVendors(FALLBACK_VENDORS); });

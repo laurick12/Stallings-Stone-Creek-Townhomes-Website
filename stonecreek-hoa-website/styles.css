@@ -93,6 +93,20 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   padding:.1rem .35rem; cursor:pointer; opacity:.85;
 }
 .banner__close:hover{opacity:1;}
+/* Info tier uses the default forest background; badge in sage for contrast. */
+.banner[data-severity="info"] .banner__badge{
+  background:var(--sage); color:var(--forest);
+}
+/* Urgent pill: compact, in the sticky header, shown only when an Urgent
+   banner was collapsed. It is not a dismissal — click it to reopen the banner. */
+.urgent-pill{
+  display:block; width:100%; border:0; cursor:pointer;
+  background:var(--clay); color:var(--cream);
+  font:inherit; font-size:.78rem; font-weight:700; letter-spacing:.02em;
+  padding:.4rem var(--gutter); text-align:center;
+}
+.urgent-pill[hidden]{display:none;}
+.urgent-pill:hover{background:#9c3f1e;}
 
 @media (max-width:860px){
   .banner__inner{padding:.42rem var(--gutter); gap:.5rem;}

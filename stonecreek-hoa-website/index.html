@@ -14,19 +14,28 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="masthead" id="masthead">
-    <!-- Top Community Announcement Band -->
-    <div id="site-banner" class="banner" role="region" aria-label="Community announcements" hidden>
-      <div class="banner__inner">
-        <span class="banner__badge" id="banner-badge">Important</span>
-        <p class="banner__text" id="banner-text"></p>
-        <div class="banner__actions">
-          <button type="button" class="banner__details" id="banner-details-btn">Details</button>
-          <a class="banner__link" id="banner-link" href="#guide" hidden>View</a>
-          <button type="button" class="banner__close" id="banner-close-btn" aria-label="Dismiss announcement">×</button>
-        </div>
+  <!-- Top Community Announcement Band — above the sticky header, so it scrolls away.
+       Source of truth is announcements.json only. See ANNOUNCEMENTS.md to add/remove. -->
+  <div id="site-banner" class="banner" role="region" aria-label="Community announcements" hidden>
+    <div class="banner__inner">
+      <span class="banner__badge" id="banner-badge">Important</span>
+      <p class="banner__text" id="banner-text"></p>
+      <div class="banner__actions">
+        <button type="button" class="banner__details" id="banner-details-btn">Details</button>
+        <a class="banner__link" id="banner-link" href="#guide" hidden>View</a>
+        <button type="button" class="banner__close" id="banner-close-btn" aria-label="Dismiss announcement">×</button>
       </div>
     </div>
+  </div>
+
+  <header class="masthead" id="masthead">
+    <!-- Urgent pill: shows in the sticky header only when an Urgent banner was collapsed.
+         It is not a dismissal — the Urgent notice returns on the next page load until it is removed or expires. -->
+    <button type="button" id="urgent-pill" class="urgent-pill" hidden>
+      <span aria-hidden="true">⚠</span>
+      <span id="urgent-pill-text">1 Urgent Alert</span>
+      <span aria-hidden="true">— View</span>
+    </button>
 
     <div class="masthead__inner">
       <a class="wordmark" href="#top" id="top">
