@@ -53,11 +53,11 @@
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
         <a href="#about">About</a>
-        <a href="#board">Board</a>
-        <a href="#resources">Resources</a>
-        <a href="#vendors">Vendors</a>
         <a href="#guide">Guide</a>
+        <a href="#vendors">Vendors</a>
+        <a href="#resources">Resources</a>
         <a href="#faq">FAQ</a>
+        <a href="#board">Board</a>
         <a class="site-nav__cta" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
       </nav>
     </div>
@@ -89,77 +89,89 @@
         </aside>
       </div>
     </section>
-
-    <!-- VENDORS (Moved to top utility) -->
-    <section class="section" id="vendors" aria-labelledby="vendors-title">
+<section class="section" id="about" aria-labelledby="about-title">
       <div class="wrap">
         <div class="section-head">
-          <p class="section-label">Neighbors' Directory</p>
-          <h2 id="vendors-title">Local &amp; Vetted Vendors</h2>
-          <p>Search pros your Stone Creek neighbors have hired and reviewed — no external spreadsheets required.</p>
+          <p class="section-label">Getting started</p>
+          <h2 id="about-title">Your community runs on two platforms</h2>
+          <p>This website is for connection and everyday neighborhood tools — no login needed. The CiraNet Resident Portal handles secure financial and legal records.</p>
         </div>
 
-        <div class="vendor-controls" aria-label="Filter vendors">
-          <div class="vendor-controls__top">
-            <label class="search-field">
-              <span class="sr-only">Search vendors by name, trade, or keyword</span>
-              <input type="search" id="vendor-search" placeholder="Search plumber, HVAC, EV charger, drywall…" autocomplete="off" />
-            </label>
+        <div class="platforms">
+          <article class="platform">
+            <p class="platform__eyebrow">This website · Open to all</p>
+            <h3>Community &amp; Info</h3>
+            <p>Everything you can browse without an account.</p>
+            <ul class="platform__list">
+              <li>Meet your Board members</li>
+              <li>Check community parking maps &amp; amenity rules</li>
+              <li>Book the playground &amp; pavilion online</li>
+              <li>Search &amp; review neighbor-vetted vendors</li>
+            </ul>
+          </article>
 
-            <label class="toggle-check">
-              <input type="checkbox" id="vendor-tested-only" />
-              <span>★ Community Tested Only</span>
-            </label>
+          <article class="platform platform--portal">
+            <span class="platform__badge">Secure Vault</span>
+            <p class="platform__eyebrow">CiraNet · Homeowner Login Required</p>
+            <h3>Resident Portal</h3>
+            <p>Your verified home for official transactions &amp; sensitive PDFs.</p>
+            <ul class="platform__list">
+              <li>Pay monthly HOA assessments</li>
+              <li>Check account balance &amp; payment history</li>
+              <li>Submit Architectural (ARC) requests</li>
+              <li>Download Master Insurance Policy, CC&amp;Rs &amp; minutes</li>
+            </ul>
+            <a class="btn btn--cream" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Log in to the Portal ↗</a>
+          </article>
+        </div>
 
-            <label class="sort-field">
-              <span class="sr-only">Sort vendors</span>
-              <select id="vendor-sort">
-                <option value="vouches">Sort: Most Vouched</option>
-                <option value="rating">Sort: Highest Rated</option>
-                <option value="name">Sort: A – Z</option>
-              </select>
-            </label>
+        <!-- Subtle Behavioral Gamification: New-Neighbor 30-Day Progress Checklist -->
+        <aside class="onboard" aria-labelledby="onboard-title">
+          <div class="onboard__head">
+            <div>
+              <p class="onboard__kicker">New to Stone Creek? · Saved on this device</p>
+              <h3 id="onboard-title">Your First 30 Days Checklist</h3>
+            </div>
+            <div class="onboard__stat">
+              <span id="onboard-pct">0%</span> complete
+            </div>
           </div>
 
-          <div class="pill-row" id="vendor-categories" role="group" aria-label="Filter by trade category">
-            <button type="button" class="pill is-active" data-cat="All">All Trades</button>
-            <button type="button" class="pill" data-cat="HVAC">HVAC</button>
-            <button type="button" class="pill" data-cat="Plumbing">Plumbing</button>
-            <button type="button" class="pill" data-cat="Electrical">Electrical</button>
-            <button type="button" class="pill" data-cat="Handyman">Handyman</button>
-            <button type="button" class="pill" data-cat="Cleaning">Cleaning</button>
-            <button type="button" class="pill" data-cat="Pest Control">Pest Control</button>
-            <button type="button" class="pill" data-cat="Landscaping">Landscaping</button>
+          <div class="onboard__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="onboard-progressbar">
+            <div class="onboard__fill" id="onboard-fill" style="width:0%"></div>
           </div>
 
-          <p class="vendor-count" id="vendor-count" aria-live="polite"></p>
-        </div>
-
-        <div class="vendor-grid" id="vendor-grid"></div>
-
-        <div class="notice">
-          <strong>Used a great local pro or tried one of our Neighbor Leads?</strong>
-          Share a quick review on any vendor card above (or submit a brand-new pro) so neighbors can hire with confidence.
-          <br />
-          <div class="notice__actions">
-            <button type="button" class="btn btn--solid" id="open-new-vendor-btn">+ Recommend a New Vendor</button>
-            <a class="btn btn--ghost" href="https://forms.gle/7eLrH49JHgsBZvjb9" target="_blank" rel="noopener">Google Form Backup ↗</a>
-          </div>
-          <p class="archive-links">
-            Legacy Google Doc archives:
-            <a href="https://docs.google.com/document/d/1HfmQ_FhyghodeeVrdxvfaRZ8DzGl4CHb/edit?usp=sharing" target="_blank" rel="noopener">Recommended List Doc ↗</a> ·
-            <a href="https://docs.google.com/document/d/1SOKejOjc9m6xSPS6DTPztk3d2_LJNiUt/edit?usp=sharing" target="_blank" rel="noopener">Local Support Doc ↗</a>
-          </p>
-        </div>
-
-        <div class="disclaimer" role="note">
-          <p><strong>Disclaimer:</strong> These vendor lists are provided as a courtesy for informational purposes only. The HOA Board does not endorse, guarantee, or assume responsibility for the quality, pricing, or performance of any listed service provider. Residents are encouraged to conduct their own due diligence, obtain multiple quotes, and verify licensing and insurance before hiring.</p>
-        </div>
+          <ul class="onboard__list" id="onboard-list">
+            <li>
+              <label class="onboard__item">
+                <input type="checkbox" data-step="portal" />
+                <span><strong>Activate CiraNet Portal</strong> — set up autopay and verify your mailing address.</span>
+              </label>
+            </li>
+            <li>
+              <label class="onboard__item">
+                <input type="checkbox" data-step="parking" />
+                <span><strong>Review Guest Parking &amp; Alley Rules</strong> — share the no-tow map with family &amp; visitors.</span>
+              </label>
+            </li>
+            <li>
+              <label class="onboard__item">
+                <input type="checkbox" data-step="facebook" />
+                <span><strong>Join the Stone Creek Facebook Group</strong> — connect with neighbors off the record.</span>
+              </label>
+            </li>
+            <li>
+              <label class="onboard__item">
+                <input type="checkbox" data-step="vendors" />
+                <span><strong>Bookmark Vetted Home Pros</strong> — keep trusted HVAC &amp; plumbing contacts handy.</span>
+              </label>
+            </li>
+          </ul>
+          <p class="onboard__done" id="onboard-done" hidden>❧ You're all settled in, neighbor! Thanks for helping keep Stone Creek running smoothly.</p>
+        </aside>
       </div>
     </section>
-
-    <!-- GUIDE (Pavilion & Parking) -->
-    <section class="section section--tint" id="guide" aria-labelledby="guide-title">
+<section class="section section--tint" id="guide" aria-labelledby="guide-title">
       <div class="wrap">
         <div class="section-head">
           <p class="section-label">Amenities &amp; Rules</p>
@@ -329,9 +341,73 @@
         </div>
       </div>
     </section>
+<section class="section" id="vendors" aria-labelledby="vendors-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="section-label">Neighbors' Directory</p>
+          <h2 id="vendors-title">Local &amp; Vetted Vendors</h2>
+          <p>Search pros your Stone Creek neighbors have hired and reviewed — no external spreadsheets required.</p>
+        </div>
 
-    <!-- RESOURCES & TOOLS -->
-    <section class="section" id="resources" aria-labelledby="res-title">
+        <div class="vendor-controls" aria-label="Filter vendors">
+          <div class="vendor-controls__top">
+            <label class="search-field">
+              <span class="sr-only">Search vendors by name, trade, or keyword</span>
+              <input type="search" id="vendor-search" placeholder="Search plumber, HVAC, EV charger, drywall…" autocomplete="off" />
+            </label>
+
+            <label class="toggle-check">
+              <input type="checkbox" id="vendor-tested-only" />
+              <span>★ Community Tested Only</span>
+            </label>
+
+            <label class="sort-field">
+              <span class="sr-only">Sort vendors</span>
+              <select id="vendor-sort">
+                <option value="vouches">Sort: Most Vouched</option>
+                <option value="rating">Sort: Highest Rated</option>
+                <option value="name">Sort: A – Z</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="pill-row" id="vendor-categories" role="group" aria-label="Filter by trade category">
+            <button type="button" class="pill is-active" data-cat="All">All Trades</button>
+            <button type="button" class="pill" data-cat="HVAC">HVAC</button>
+            <button type="button" class="pill" data-cat="Plumbing">Plumbing</button>
+            <button type="button" class="pill" data-cat="Electrical">Electrical</button>
+            <button type="button" class="pill" data-cat="Handyman">Handyman</button>
+            <button type="button" class="pill" data-cat="Cleaning">Cleaning</button>
+            <button type="button" class="pill" data-cat="Pest Control">Pest Control</button>
+            <button type="button" class="pill" data-cat="Landscaping">Landscaping</button>
+          </div>
+
+          <p class="vendor-count" id="vendor-count" aria-live="polite"></p>
+        </div>
+
+        <div class="vendor-grid" id="vendor-grid"></div>
+
+        <div class="notice">
+          <strong>Used a great local pro or tried one of our Neighbor Leads?</strong>
+          Share a quick review on any vendor card above (or submit a brand-new pro) so neighbors can hire with confidence.
+          <br />
+          <div class="notice__actions">
+            <button type="button" class="btn btn--solid" id="open-new-vendor-btn">+ Recommend a New Vendor</button>
+            <a class="btn btn--ghost" href="https://forms.gle/7eLrH49JHgsBZvjb9" target="_blank" rel="noopener">Google Form Backup ↗</a>
+          </div>
+          <p class="archive-links">
+            Legacy Google Doc archives:
+            <a href="https://docs.google.com/document/d/1HfmQ_FhyghodeeVrdxvfaRZ8DzGl4CHb/edit?usp=sharing" target="_blank" rel="noopener">Recommended List Doc ↗</a> ·
+            <a href="https://docs.google.com/document/d/1SOKejOjc9m6xSPS6DTPztk3d2_LJNiUt/edit?usp=sharing" target="_blank" rel="noopener">Local Support Doc ↗</a>
+          </p>
+        </div>
+
+        <div class="disclaimer" role="note">
+          <p><strong>Disclaimer:</strong> These vendor lists are provided as a courtesy for informational purposes only. The HOA Board does not endorse, guarantee, or assume responsibility for the quality, pricing, or performance of any listed service provider. Residents are encouraged to conduct their own due diligence, obtain multiple quotes, and verify licensing and insurance before hiring.</p>
+        </div>
+      </div>
+    </section>
+<section class="section" id="resources" aria-labelledby="res-title">
       <div class="wrap">
         <div class="section-head">
           <p class="section-label">Documents &amp; tools</p>
@@ -471,9 +547,7 @@
         </aside>
       </div>
     </section>
-
-    <!-- FAQ -->
-    <section class="section section--tint" id="faq" aria-labelledby="faq-title">
+<section class="section section--tint" id="faq" aria-labelledby="faq-title">
       <div class="wrap">
         <div class="section-head section-head--center">
           <p class="section-label">Common questions</p>
@@ -502,93 +576,7 @@
         </div>
       </div>
     </section>
-
-    <!-- ABOUT -->
-    <section class="section" id="about" aria-labelledby="about-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Getting started</p>
-          <h2 id="about-title">Your community runs on two platforms</h2>
-          <p>This website is for connection and everyday neighborhood tools — no login needed. The CiraNet Resident Portal handles secure financial and legal records.</p>
-        </div>
-
-        <div class="platforms">
-          <article class="platform">
-            <p class="platform__eyebrow">This website · Open to all</p>
-            <h3>Community &amp; Info</h3>
-            <p>Everything you can browse without an account.</p>
-            <ul class="platform__list">
-              <li>Meet your Board members</li>
-              <li>Check community parking maps &amp; amenity rules</li>
-              <li>Book the playground &amp; pavilion online</li>
-              <li>Search &amp; review neighbor-vetted vendors</li>
-            </ul>
-          </article>
-
-          <article class="platform platform--portal">
-            <span class="platform__badge">Secure Vault</span>
-            <p class="platform__eyebrow">CiraNet · Homeowner Login Required</p>
-            <h3>Resident Portal</h3>
-            <p>Your verified home for official transactions &amp; sensitive PDFs.</p>
-            <ul class="platform__list">
-              <li>Pay monthly HOA assessments</li>
-              <li>Check account balance &amp; payment history</li>
-              <li>Submit Architectural (ARC) requests</li>
-              <li>Download Master Insurance Policy, CC&amp;Rs &amp; minutes</li>
-            </ul>
-            <a class="btn btn--cream" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Log in to the Portal ↗</a>
-          </article>
-        </div>
-
-        <!-- Subtle Behavioral Gamification: New-Neighbor 30-Day Progress Checklist -->
-        <aside class="onboard" aria-labelledby="onboard-title">
-          <div class="onboard__head">
-            <div>
-              <p class="onboard__kicker">New to Stone Creek? · Saved on this device</p>
-              <h3 id="onboard-title">Your First 30 Days Checklist</h3>
-            </div>
-            <div class="onboard__stat">
-              <span id="onboard-pct">0%</span> complete
-            </div>
-          </div>
-
-          <div class="onboard__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="onboard-progressbar">
-            <div class="onboard__fill" id="onboard-fill" style="width:0%"></div>
-          </div>
-
-          <ul class="onboard__list" id="onboard-list">
-            <li>
-              <label class="onboard__item">
-                <input type="checkbox" data-step="portal" />
-                <span><strong>Activate CiraNet Portal</strong> — set up autopay and verify your mailing address.</span>
-              </label>
-            </li>
-            <li>
-              <label class="onboard__item">
-                <input type="checkbox" data-step="parking" />
-                <span><strong>Review Guest Parking &amp; Alley Rules</strong> — share the no-tow map with family &amp; visitors.</span>
-              </label>
-            </li>
-            <li>
-              <label class="onboard__item">
-                <input type="checkbox" data-step="facebook" />
-                <span><strong>Join the Stone Creek Facebook Group</strong> — connect with neighbors off the record.</span>
-              </label>
-            </li>
-            <li>
-              <label class="onboard__item">
-                <input type="checkbox" data-step="vendors" />
-                <span><strong>Bookmark Vetted Home Pros</strong> — keep trusted HVAC &amp; plumbing contacts handy.</span>
-              </label>
-            </li>
-          </ul>
-          <p class="onboard__done" id="onboard-done" hidden>❧ You're all settled in, neighbor! Thanks for helping keep Stone Creek running smoothly.</p>
-        </aside>
-      </div>
-    </section>
-
-    <!-- BOARD -->
-    <section class="section section--tint" id="board" aria-labelledby="board-title">
+<section class="section section--tint" id="board" aria-labelledby="board-title">
       <div class="wrap">
         <div class="section-head">
           <p class="section-label">Leadership</p>
@@ -644,11 +632,11 @@
         </div>
         <nav class="foot__links" aria-label="Footer">
           <a href="#about">About</a>
-          <a href="#board">Board</a>
-          <a href="#resources">Resources</a>
-          <a href="#vendors">Vendors</a>
           <a href="#guide">Guide</a>
+          <a href="#vendors">Vendors</a>
+          <a href="#resources">Resources</a>
           <a href="#faq">FAQ</a>
+          <a href="#board">Board</a>
           <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
         </nav>
       </div>
