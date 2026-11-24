@@ -4,7 +4,7 @@
 
   /* Optional n8n webhook endpoints (leave empty to use built-in Google Form / optimistic fallback) */
   var CONFIG = {
-    pavilionWebhookUrl: "",
+    pavilionWebhookUrl: "https://n8n.zenithprotech.com/webhook/stone-creek-pavilion",
     vendorReviewWebhookUrl: "",
     boardFeedbackWebhookUrl: "",
     googleFeedbackFormUrl: "https://forms.gle/znxSsAfgb85LohUy9",
