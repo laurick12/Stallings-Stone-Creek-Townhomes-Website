@@ -9,7 +9,14 @@
     boardFeedbackWebhookUrl: "https://n8n.zenithprotech.com/webhook/stone-creek-board-feedback",
     googleFeedbackFormUrl: "https://forms.gle/znxSsAfgb85LohUy9",
     googleBookingFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdLltBb4FszXzhnI1puQQXvZTVWYF55tm94RujMw_ri-OU7nQ/viewform",
-    googleVendorFormUrl: "https://forms.gle/7eLrH49JHgsBZvjb9"
+    googleVendorFormUrl: "https://forms.gle/7eLrH49JHgsBZvjb9",
+    /* Firebase vendor reviews (locked 2026-11-23). Paste the web app config
+       here once the project exists, e.g.
+       firebaseConfig: { apiKey: "...", authDomain: "...firebaseapp.com",
+         projectId: "...", storageBucket: "...appspot.com",
+         messagingSenderId: "...", appId: "..." }
+       Until this is set, reviews fall back to the Google Form. */
+    firebaseConfig: null
   };
 
   /* Embedded fallback data so local file:// preview works without CORS issues */
@@ -541,8 +548,48 @@
     modal.showModal();
   }
 
+  var firebaseDb = null;
+
+  function initFirebaseReviews() {
+    if (!CONFIG.firebaseConfig || !window.firebase || !window.firebase.firestore) return;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(CONFIG.firebaseConfig);
+      firebaseDb = firebase.firestore();
+      firebaseDb.collection("vendorReviews").orderBy("submittedAt", "desc").onSnapshot(function (snap) {
+        var byVendor = {};
+        snap.forEach(function (doc) {
+          var r = doc.data() || {};
+          if (!r.vendorId || r.vendorId === "new") return;
+          (byVendor[r.vendorId] = byVendor[r.vendorId] || []).push(r);
+        });
+        vendorsList.forEach(function (v) {
+          var list = byVendor[v.id] || [];
+          if (!list.length) return;
+          var sum = 0;
+          list.forEach(function (r) { sum += Number(r.rating) || 0; });
+          v.vouches = list.length;
+          v.rating = Number((sum / list.length).toFixed(1));
+          v.tested = true;
+          v.reviews = list.map(function (r) {
+            var d = r.submittedAt && r.submittedAt.toDate ? r.submittedAt.toDate() : new Date(r.submittedAt || Date.now());
+            return {
+              author: "Verified Resident \u00b7 " + (r.residentStreet || ""),
+              date: d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+              rating: Number(r.rating) || 0,
+              text: r.reviewText || ""
+            };
+          });
+        });
+        renderVendors();
+      });
+    } catch (err) {
+      firebaseDb = null;
+    }
+  }
+
   function initVendors(data) {
     vendorsList = Array.isArray(data) ? data : [];
+    initFirebaseReviews();
     var vettedCount = vendorsList.filter(function (v) { return v.tested; }).length;
     var vitality = document.getElementById("hero-vitality");
     if (vitality) {
@@ -588,37 +635,32 @@
           submittedAt: new Date().toISOString()
         };
 
-        if (CONFIG.vendorReviewWebhookUrl) {
-          fetch(CONFIG.vendorReviewWebhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          }).catch(function () {});
+        /* Firebase is the review database (locked 2026-11-23). Until its
+           config is pasted in, a review is NOT recorded onsite, so say so
+           and send the resident to the Google Form instead of faking it. */
+        if (firebaseDb) {
+          statusEl.textContent = "Saving your review\u2026";
+          payload.source = "stone-creek-site";
+          payload.submittedAt = firebase.firestore.FieldValue.serverTimestamp();
+          firebaseDb.collection("vendorReviews").add(payload).then(function () {
+            statusEl.textContent = "Thank you, neighbor! Your review is live for Stone Creek.";
+            reviewForm.reset();
+            setTimeout(function () {
+              var dlg = document.getElementById("vendor-modal");
+              if (dlg && dlg.open) dlg.close();
+            }, 1400);
+          }).catch(function () {
+            statusEl.textContent = "Could not save your review. Opening the Google Form to finish it there.";
+            window.open(CONFIG.googleVendorFormUrl, "_blank", "noopener");
+          });
+        } else {
+          statusEl.textContent = "Opening the Google Form \u2014 your review is not saved until you submit it there.";
+          setTimeout(function () {
+            window.open(CONFIG.googleVendorFormUrl, "_blank", "noopener");
+            var dlg = document.getElementById("vendor-modal");
+            if (dlg && dlg.open) dlg.close();
+          }, 900);
         }
-
-        if (activeVendorId) {
-          var target = vendorsList.find(function (v) { return v.id === activeVendorId; });
-          if (target) {
-            target.tested = true;
-            target.vouches = (target.vouches || 0) + 1;
-            target.rating = target.rating ? Number(((target.rating + payload.rating) / 2).toFixed(1)) : payload.rating;
-            target.reviews = target.reviews || [];
-            target.reviews.unshift({
-              author: "Verified Resident · " + payload.residentStreet,
-              date: "Just now",
-              rating: payload.rating,
-              text: payload.reviewText
-            });
-            renderVendors();
-          }
-        }
-
-        statusEl.textContent = "Thank you, neighbor! Your review has been recorded for Stone Creek.";
-        reviewForm.reset();
-        setTimeout(function () {
-          var dlg = document.getElementById("vendor-modal");
-          if (dlg && dlg.open) dlg.close();
-        }, 1400);
       });
     }
 
