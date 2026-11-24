@@ -6,7 +6,7 @@
   var CONFIG = {
     pavilionWebhookUrl: "https://n8n.zenithprotech.com/webhook/stone-creek-pavilion",
     vendorReviewWebhookUrl: "",
-    boardFeedbackWebhookUrl: "",
+    boardFeedbackWebhookUrl: "https://n8n.zenithprotech.com/webhook/stone-creek-board-feedback",
     googleFeedbackFormUrl: "https://forms.gle/znxSsAfgb85LohUy9",
     googleBookingFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdLltBb4FszXzhnI1puQQXvZTVWYF55tm94RujMw_ri-OU7nQ/viewform",
     googleVendorFormUrl: "https://forms.gle/7eLrH49JHgsBZvjb9"
