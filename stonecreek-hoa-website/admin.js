@@ -41,7 +41,24 @@
   var auth = firebase.auth();
 
   document.getElementById("signin-btn").addEventListener("click", function () {
-    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    var btn = document.getElementById("signin-btn");
+    btn.disabled = true;
+    statusEl.textContent = "Opening Google sign-in\u2026";
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function (err) {
+      btn.disabled = false;
+      var code = (err && err.code) || "";
+      if (code === "auth/popup-blocked" || code === "auth/popup-closed-by-user") {
+        statusEl.textContent = "The Google sign-in window was blocked or closed. Allow pop-ups for this site and try again.";
+      } else if (code === "auth/operation-not-allowed") {
+        statusEl.textContent = "Google sign-in is not turned on in Firebase yet. In the Firebase console: Authentication, Sign-in method, Google, Enable, Save.";
+      } else if (code === "auth/unauthorized-domain") {
+        statusEl.textContent = "This site's address is not on Firebase's allowed list yet. In the Firebase console: Authentication, Settings, Authorized domains, add brave-meadow-0248d2f0f.7.azurestaticapps.net, Save.";
+      } else if (code === "auth/cancelled-popup-request") {
+        statusEl.textContent = "Sign-in was already in progress. Wait a moment and try again.";
+      } else {
+        statusEl.textContent = "Google sign-in failed (" + (code || "unknown error") + "). Tell Genius the exact message and he can fix it.";
+      }
+    });
   });
   document.getElementById("signout-btn").addEventListener("click", function () {
     auth.signOut();
