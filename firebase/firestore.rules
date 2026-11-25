@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Board members, by Google sign-in email. Keep this list in sync with
+    // STONE_CREEK_BOARD_EMAILS in firebase-config.js.
+    function isBoard() {
+      return request.auth != null && request.auth.token.email in [
+        "laurickamadi@gmail.com",
+        "jessinsims@gmail.com",
+        "keianna07@gmail.com"
+      ];
+    }
+
+    // Vendor reviews: anyone can read them (they show on the public site),
+    // anyone can create one if it passes validation, only the board can
+    // delete one (from the admin page), nobody can edit through the site.
+    match /vendorReviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.resource.data.vendorId is string
+        && request.resource.data.vendorId.size() > 0
+        && request.resource.data.vendorId.size() < 100
+        && request.resource.data.rating is number
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.reviewText is string
+        && request.resource.data.reviewText.size() >= 10
+        && request.resource.data.reviewText.size() <= 1000
+        && request.resource.data.residentStreet is string
+        && request.resource.data.residentStreet.size() > 0
+        && request.resource.data.residentStreet.size() < 100;
+      allow delete: if isBoard();
+      allow update: if false;
+    }
+
+    // Vendor suggestions: anyone can create one (a resident recommending a
+    // new vendor), only the board can read, approve or reject them.
+    // Nothing here goes live until the board approves it on the admin page.
+    match /vendorSuggestions/{suggestionId} {
+      allow create: if request.resource.data.vendorName is string
+        && request.resource.data.vendorName.size() > 0
+        && request.resource.data.vendorName.size() < 100
+        && request.resource.data.rating is number
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.reviewText is string
+        && request.resource.data.reviewText.size() >= 10
+        && request.resource.data.reviewText.size() <= 1000;
+      allow read, update, delete: if isBoard();
+    }
+
+    // The vendor directory itself: anyone can read it, only the board can
+    // add, change or remove a vendor (from the admin page).
+    match /vendors/{vendorId} {
+      allow read: if true;
+      allow create, update, delete: if isBoard();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

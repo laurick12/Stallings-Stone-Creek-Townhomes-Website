@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Board Admin — Stone Creek Townhomes</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: #f6f4ef; color: #1f2937; font-family: system-ui, sans-serif; margin: 0; }
+  .admin { max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
+  .admin h1 { font-size: 26px; margin: 8px 0 4px; }
+  .admin p.lede { color: #4b5563; margin: 0 0 20px; }
+  .admin .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin: 16px 0; }
+  .admin .card h2 { font-size: 18px; margin: 0 0 8px; }
+  .admin .item { border-top: 1px solid #e5e7eb; padding: 12px 0; }
+  .admin .item:first-of-type { border-top: none; }
+  .admin .item .meta { color: #6b7280; font-size: 13px; }
+  .admin .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .admin button { cursor: pointer; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; padding: 8px 14px; font-size: 14px; }
+  .admin button.primary { background: #1d6b4f; color: #fff; border-color: #1d6b4f; }
+  .admin button.danger { background: #fff; color: #b91c1c; border-color: #fecaca; }
+  .admin button:disabled { opacity: .5; cursor: default; }
+  .admin .empty { color: #6b7280; }
+  .admin .warn { background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 12px; }
+  #admin-status { color: #6b7280; font-size: 14px; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
+<script src="firebase-config.js" defer></script>
+</head>
+<body>
+<main class="admin">
+  <h1>Board Admin</h1>
+  <p class="lede">Stone Creek Townhomes — vendor suggestions, reviews, and the directory. Board members only.</p>
+  <p id="admin-status">Loading…</p>
+  <div id="admin-signin" style="display:none">
+    <button id="signin-btn" class="primary" type="button">Sign in with Google</button>
+  </div>
+  <div id="admin-app" style="display:none">
+    <div class="row">
+      <span id="admin-who"></span>
+      <button id="signout-btn" type="button">Sign out</button>
+    </div>
+    <div class="card" id="seed-card" style="display:none">
+      <h2>Directory not loaded yet</h2>
+      <p>The vendor directory still comes from the site file. Load the current 8 vendors into the database once, and the directory will be managed from here from then on.</p>
+      <button id="seed-btn" class="primary" type="button">Load the current 8 vendors</button>
+    </div>
+    <div class="card">
+      <h2>Pending vendor suggestions (<span id="pending-count">0</span>)</h2>
+      <p class="lede">Residents recommended these. Nothing here is live until you approve it.</p>
+      <div id="pending-list"><p class="empty">No pending suggestions.</p></div>
+    </div>
+    <div class="card">
+      <h2>Reviews</h2>
+      <p class="lede">Every review on the site, newest first. Delete removes it from the site right away.</p>
+      <div id="reviews-list"><p class="empty">No reviews yet.</p></div>
+    </div>
+    <div class="card">
+      <h2>Vendors on the site</h2>
+      <div id="vendors-list"><p class="empty">Loading…</p></div>
+    </div>
+  </div>
+  <p><a href="./">← Back to the community site</a></p>
+</main>
+<script>
+(function () {
+  var statusEl = document.getElementById("admin-status");
+  var signinEl = document.getElementById("admin-signin");
+  var appEl = document.getElementById("admin-app");
+  var boardEmails = (window.STONE_CREEK_BOARD_EMAILS || []).map(function (e) { return String(e).toLowerCase(); });
+  var cfg = window.STONE_CREEK_FIREBASE_CONFIG;
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function slug(name) {
+    return String(name || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "vendor";
+  }
+  function fmtDate(ts) {
+    try {
+      var d = ts && ts.toDate ? ts.toDate() : new Date(ts || Date.now());
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    } catch (e) { return ""; }
+  }
+
+  /* The 8 vendors already on the site, for the one-time load into Firestore. */
+  var SEED_VENDORS = [
+    { id: "yuri-handyman", name: "Yuri Handyman", category: "Handyman", tested: true, rating: 5.0, vouches: 1, phone: "(732) 268-9521", website: "", summary: "Community member recommended handyman services.", verifiedNotes: "Recommended List" },
+    { id: "white-electric", name: "White Electric Company", category: "Electrical", tested: true, rating: 5.0, vouches: 1, phone: "(704) 594-4612", website: "https://whiteelectriccompany.com", summary: "EV Charger Installation.", verifiedNotes: "Recommended List" },
+    { id: "brewer-mechanical", name: "Brewer Mechanical", category: "HVAC", tested: true, rating: 5.0, vouches: 1, phone: "(704) 792-5588", website: "", summary: "Heat and AC Repair.", verifiedNotes: "Recommended List · Contact: Andy Brewer (Breuermec.hvac@gmail.com)" },
+    { id: "tactical-pest", name: "Tactical Pest & Termite Solutions", category: "Pest Control", tested: true, rating: 5.0, vouches: 1, phone: "(704) 954-8455", website: "https://tactical-pest.com", summary: "Pest Control Services – Mint Hill, NC.", verifiedNotes: "Recommended List · Contact: Gary Wojciechowicz (info@tactical-pest.com)" },
+    { id: "blue-cedar-residential", name: "Blue Cedar Residential", category: "Handyman", tested: false, rating: 0, vouches: 0, phone: "(980) 833-5454", website: "", summary: "Handyman / Locksmith services.", verifiedNotes: "Local Support List (Unvetted) · Contact: Jon Cannup (Bluecedarresidential@gmail.com)" },
+    { id: "cottagecare-charlotte", name: "CottageCare of Charlotte", category: "Cleaning", tested: false, rating: 0, vouches: 0, phone: "(704) 847-8660", website: "", summary: "House Cleaning in Charlotte, NC.", verifiedNotes: "Local Support List (Unvetted) · Contact: Adam Strader" },
+    { id: "queenbees-pest", name: "QueenBee's Pest Solutions", category: "Pest Control", tested: false, rating: 0, vouches: 0, phone: "(980) 414-2819", website: "", summary: "Pest control solutions.", verifiedNotes: "Local Support List (Unvetted) · Contact: Keenan (queenbeespest@gmail.com)" },
+    { id: "sparkle-squad", name: "Sparkle Squad", category: "Cleaning", tested: false, rating: 0, vouches: 0, phone: "(704) 593-9559", website: "", summary: "Professional Window Cleaning and Pressure Washing Services.", verifiedNotes: "Local Support List (Unvetted)" }
+  ];
+
+  if (!cfg || !window.firebase) {
+    statusEl.textContent = "Firebase is not configured yet. Paste the web app config into firebase-config.js first (see firebase/FIREBASE_SETUP.md in the repo).";
+    return;
+  }
+  if (!firebase.apps.length) firebase.initializeApp(cfg);
+  var db = firebase.firestore();
+  var auth = firebase.auth();
+
+  document.getElementById("signin-btn").addEventListener("click", function () {
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  });
+  document.getElementById("signout-btn").addEventListener("click", function () {
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(function (user) {
+    if (!user) {
+      statusEl.textContent = "Sign in with your board Google account to continue.";
+      signinEl.style.display = "";
+      appEl.style.display = "none";
+      return;
+    }
+    var email = String(user.email || "").toLowerCase();
+    if (boardEmails.indexOf(email) === -1) {
+      statusEl.innerHTML = "<span class='warn'>This page is for board members only. Signed in as " + esc(user.email) + ", which is not on the board list.</span>";
+      signinEl.style.display = "none";
+      appEl.style.display = "none";
+      auth.signOut();
+      return;
+    }
+    statusEl.textContent = "";
+    signinEl.style.display = "none";
+    appEl.style.display = "";
+    document.getElementById("admin-who").textContent = "Signed in as " + user.email;
+    loadAll();
+  });
+
+  function loadAll() {
+    db.collection("vendorSuggestions").where("status", "==", "pending").orderBy("submittedAt", "desc").onSnapshot(function (snap) {
+      var list = document.getElementById("pending-list");
+      document.getElementById("pending-count").textContent = snap.size;
+      if (snap.empty) { list.innerHTML = "<p class='empty'>No pending suggestions.</p>"; return; }
+      list.innerHTML = "";
+      snap.forEach(function (doc) {
+        var s = doc.data() || {};
+        var div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = "<strong>" + esc(s.vendorName) + "</strong> · " + esc(s.vendorCategory || "") +
+          "<div class='meta'>" + esc(s.vendorPhone || "") + (s.vendorWebsite ? " · <a href='" + esc(s.vendorWebsite) + "' target='_blank' rel='noopener'>" + esc(s.vendorWebsite) + "</a>" : "") +
+          " · Recommended by a resident on " + esc(s.residentStreet || "") + " · " + fmtDate(s.submittedAt) + "</div>" +
+          "<p>“" + esc(s.reviewText || "") + "” — " + Number(s.rating || 0) + "/5</p>";
+        var row = document.createElement("div");
+        row.className = "row";
+        var ok = document.createElement("button");
+        ok.className = "primary"; ok.textContent = "Approve — add to directory";
+        ok.addEventListener("click", function () { approveSuggestion(doc.id, s, ok); });
+        var no = document.createElement("button");
+        no.textContent = "Reject";
+        no.addEventListener("click", function () { rejectSuggestion(doc.id, no); });
+        row.appendChild(ok); row.appendChild(no);
+        div.appendChild(row);
+        list.appendChild(div);
+      });
+    });
+    db.collection("vendorReviews").orderBy("submittedAt", "desc").limit(100).onSnapshot(function (snap) {
+      var list = document.getElementById("reviews-list");
+      if (snap.empty) { list.innerHTML = "<p class='empty'>No reviews yet.</p>"; return; }
+      list.innerHTML = "";
+      snap.forEach(function (doc) {
+        var r = doc.data() || {};
+        var div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = "<strong>" + esc(r.vendorName || r.vendorId || "") + "</strong> · ★ " + Number(r.rating || 0) + "/5 · " + fmtDate(r.submittedAt) +
+          "<div class='meta'>" + esc(r.residentStreet || "") + "</div><p>“" + esc(r.reviewText || "") + "”</p>";
+        var del = document.createElement("button");
+        del.className = "danger"; del.textContent = "Delete review";
+        del.addEventListener("click", function () {
+          if (!confirm("Delete this review from the site?")) return;
+          del.disabled = true;
+          db.collection("vendorReviews").doc(doc.id).delete().catch(function () { del.disabled = false; alert("Could not delete. Try again."); });
+        });
+        div.appendChild(del);
+        list.appendChild(div);
+      });
+    });
+    db.collection("vendors").orderBy("name").onSnapshot(function (snap) {
+      var list = document.getElementById("vendors-list");
+      var seedCard = document.getElementById("seed-card");
+      if (snap.empty) {
+        seedCard.style.display = "";
+        list.innerHTML = "<p class='empty'>Directory still comes from the site file until you load the vendors above.</p>";
+        return;
+      }
+      seedCard.style.display = "none";
+      list.innerHTML = "";
+      snap.forEach(function (doc) {
+        var v = doc.data() || {};
+        var div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = "<strong>" + esc(v.name) + "</strong> · " + esc(v.category || "") +
+          "<div class='meta'>" + esc(v.phone || "") + " · " + (v.tested ? "Community Tested" : "Neighbor Lead") + "</div>";
+        var del = document.createElement("button");
+        del.className = "danger"; del.textContent = "Remove vendor";
+        del.addEventListener("click", function () {
+          if (!confirm("Remove " + v.name + " from the directory?")) return;
+          del.disabled = true;
+          db.collection("vendors").doc(doc.id).delete().catch(function () { del.disabled = false; alert("Could not remove. Try again."); });
+        });
+        div.appendChild(del);
+        list.appendChild(div);
+      });
+    });
+  }
+
+  function approveSuggestion(id, s, btn) {
+    btn.disabled = true;
+    var vendorId = slug(s.vendorName);
+    var vendor = {
+      id: vendorId, name: s.vendorName || "", category: s.vendorCategory || "Other",
+      tested: true, rating: Number(s.rating || 0), vouches: 1,
+      phone: s.vendorPhone || "", website: s.vendorWebsite || "",
+      summary: s.reviewText || "", verifiedNotes: "Recommended List"
+    };
+    db.collection("vendors").doc(vendorId).set(vendor).then(function () {
+      return db.collection("vendorReviews").add({
+        vendorId: vendorId, vendorName: vendor.name, vendorCategory: vendor.category,
+        vendorPhone: vendor.phone, vendorWebsite: vendor.website,
+        residentStreet: s.residentStreet || "", rating: Number(s.rating || 0),
+        reviewText: s.reviewText || "", submittedAt: s.submittedAt || firebase.firestore.FieldValue.serverTimestamp(),
+        source: "stone-creek-site"
+      });
+    }).then(function () {
+      return db.collection("vendorSuggestions").doc(id).update({ status: "approved" });
+    }).catch(function () {
+      btn.disabled = false;
+      alert("Could not approve. Try again.");
+    });
+  }
+
+  function rejectSuggestion(id, btn) {
+    btn.disabled = true;
+    db.collection("vendorSuggestions").doc(id).update({ status: "rejected" }).catch(function () {
+      btn.disabled = false;
+      alert("Could not reject. Try again.");
+    });
+  }
+
+  document.getElementById("seed-btn").addEventListener("click", function () {
+    var btn = document.getElementById("seed-btn");
+    btn.disabled = true;
+    var batch = db.batch();
+    SEED_VENDORS.forEach(function (v) {
+      batch.set(db.collection("vendors").doc(v.id), v);
+    });
+    batch.commit().catch(function () {
+      btn.disabled = false;
+      alert("Could not load the vendors. Try again.");
+    });
+  });
+})();
+</script>
+</body>
+</html>
