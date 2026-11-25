@@ -6,8 +6,9 @@ service cloud.firestore {
     function isBoard() {
       return request.auth != null && request.auth.token.email in [
         "laurickamadi@gmail.com",
-        "jessinsims@gmail.com",
-        "keianna07@gmail.com"
+        
+"stonecreekhoa.stallings@gmail.com",
+"Laurickamadi@zenithprotech.com"
       ];
     }
 
