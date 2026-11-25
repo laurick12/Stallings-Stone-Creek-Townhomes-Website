@@ -29,10 +29,15 @@ then paste one config block into the site and test a real review.
 1. Left menu, Build, **Authentication**, click **Get started**.
 2. **Sign-in method** tab, click **Google**, toggle **Enable**, pick a support
    email (any board member), click **Save**.
-3. The board members allowed in are listed in `firebase-config.js`
-   (`STONE_CREEK_BOARD_EMAILS`) and in `firestore.rules` (`isBoard()`).
-   Keep the two lists in sync. Today: laurickamadi@gmail.com,
-   jessinsims@gmail.com, keianna07@gmail.com.
+3. Who can use the admin page is managed in ONE place, no code needed:
+   the admin page itself, **Access** section, or the Firestore document
+   `config/access`, field `emails`. The first board member to sign in
+   seeds that list from the bootstrap list. Today the bootstrap list is:
+   laurickamadi@gmail.com, stonecreekhoa.stallings@gmail.com,
+   Laurickamadi@zenithprotech.com. (The same three are in
+   `firebase-config.js` and in `firestore.rules` only as the bootstrap
+   before the live list exists — keep them in sync if you change them
+   before the first sign-in.)
 
 ## 5. Get the web app config
 

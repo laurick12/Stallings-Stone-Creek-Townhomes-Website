@@ -62,6 +62,15 @@
       <h2>Vendors on the site</h2>
       <div id="vendors-list"><p class="empty">Loading…</p></div>
     </div>
+    <div class="card">
+      <h2>Who can use this page</h2>
+      <p class="lede">One place to manage access. Add or remove an email here and it takes effect right away — no code change, no push.</p>
+      <div id="access-list"><p class="empty">Loading…</p></div>
+      <div class="row">
+        <input id="access-add-input" type="email" placeholder="name@example.com" style="flex:1;min-width:200px;padding:8px;border:1px solid #d1d5db;border-radius:8px;">
+        <button id="access-add-btn" class="primary" type="button">Add access</button>
+      </div>
+    </div>
   </div>
   <p><a href="./">← Back to the community site</a></p>
 </main>
@@ -115,6 +124,19 @@
     auth.signOut();
   });
 
+  /* The live access list lives in Firestore (config/access, field emails).
+     Until it exists, the bootstrap list in firebase-config.js applies, and
+     the first board member to sign in seeds it. */
+  var accessDoc = db.collection("config").doc("access");
+  function resolveAccessList() {
+    return accessDoc.get().then(function (snap) {
+      if (snap.exists && Array.isArray(snap.data().emails)) {
+        return snap.data().emails.map(function (e) { return String(e).toLowerCase(); });
+      }
+      return accessDoc.set({ emails: boardEmails }).then(function () { return boardEmails.slice(); });
+    });
+  }
+
   auth.onAuthStateChanged(function (user) {
     if (!user) {
       statusEl.textContent = "Sign in with your board Google account to continue.";
@@ -122,20 +144,58 @@
       appEl.style.display = "none";
       return;
     }
-    var email = String(user.email || "").toLowerCase();
-    if (boardEmails.indexOf(email) === -1) {
-      statusEl.innerHTML = "<span class='warn'>This page is for board members only. Signed in as " + esc(user.email) + ", which is not on the board list.</span>";
+    resolveAccessList().then(function (allowed) {
+      var email = String(user.email || "").toLowerCase();
+      if (allowed.indexOf(email) === -1) {
+        statusEl.innerHTML = "<span class='warn'>This page is for board members only. Signed in as " + esc(user.email) + ", which is not on the access list.</span>";
+        signinEl.style.display = "none";
+        appEl.style.display = "none";
+        auth.signOut();
+        return;
+      }
+      statusEl.textContent = "";
       signinEl.style.display = "none";
-      appEl.style.display = "none";
-      auth.signOut();
-      return;
-    }
-    statusEl.textContent = "";
-    signinEl.style.display = "none";
-    appEl.style.display = "";
-    document.getElementById("admin-who").textContent = "Signed in as " + user.email;
-    loadAll();
+      appEl.style.display = "";
+      document.getElementById("admin-who").textContent = "Signed in as " + user.email;
+      loadAll();
+      loadAccess(allowed);
+    }).catch(function () {
+      statusEl.textContent = "Could not check access. Try signing in again.";
+    });
   });
+
+  function loadAccess(allowed) {
+    var list = document.getElementById("access-list");
+    accessDoc.onSnapshot(function (snap) {
+      var emails = (snap.exists && Array.isArray(snap.data().emails)) ? snap.data().emails : allowed;
+      list.innerHTML = "";
+      emails.forEach(function (e) {
+        var div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = "<strong>" + esc(e) + "</strong>";
+        var rm = document.createElement("button");
+        rm.className = "danger"; rm.textContent = "Remove access";
+        rm.addEventListener("click", function () {
+          if (emails.length <= 1) { alert("Keep at least one person with access."); return; }
+          if (!confirm("Remove access for " + e + "?")) return;
+          accessDoc.update({ emails: emails.filter(function (x) { return String(x).toLowerCase() !== String(e).toLowerCase(); }) });
+        });
+        div.appendChild(rm);
+        list.appendChild(div);
+      });
+    });
+    document.getElementById("access-add-btn").addEventListener("click", function () {
+      var input = document.getElementById("access-add-input");
+      var email = String(input.value || "").trim().toLowerCase();
+      if (!email || email.indexOf("@") === -1) { alert("Enter a full email address."); return; }
+      accessDoc.get().then(function (snap) {
+        var emails = (snap.exists && Array.isArray(snap.data().emails)) ? snap.data().emails : [];
+        if (emails.map(function (x) { return String(x).toLowerCase(); }).indexOf(email) !== -1) { alert("That email already has access."); return; }
+        emails.push(email);
+        return accessDoc.set({ emails: emails });
+      }).then(function () { input.value = ""; });
+    });
+  }
 
   function loadAll() {
     db.collection("vendorSuggestions").where("status", "==", "pending").orderBy("submittedAt", "desc").onSnapshot(function (snap) {

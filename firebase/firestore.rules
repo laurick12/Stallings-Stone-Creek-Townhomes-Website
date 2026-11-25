@@ -1,15 +1,32 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Board members, by Google sign-in email. Keep this list in sync with
-    // STONE_CREEK_BOARD_EMAILS in firebase-config.js.
+    // Who can use the admin page, by Google sign-in email.
+    // ONE place manages this: the Firestore document config/access,
+    // field emails, edited from the Access section of the admin page.
+    // The hardcoded list below is only the BOOTSTRAP, used until that
+    // document exists. Once it exists, it is the only list — removing
+    // someone there removes their access, no code change needed.
+    // Keep it in sync with STONE_CREEK_BOARD_EMAILS in firebase-config.js.
+    // (Both capital-L and lowercase forms of the Zenith address are listed:
+    // sign-in emails usually arrive lowercase, and this check is exact.)
     function isBoard() {
-      return request.auth != null && request.auth.token.email in [
-        "laurickamadi@gmail.com",
-        
-"stonecreekhoa.stallings@gmail.com",
-"Laurickamadi@zenithprotech.com"
-      ];
+      return request.auth != null && (
+        (!exists(/databases/$(database)/documents/config/access)
+          && request.auth.token.email in [
+            "laurickamadi@gmail.com",
+            "stonecreekhoa.stallings@gmail.com",
+            "Laurickamadi@zenithprotech.com",
+            "laurickamadi@zenithprotech.com"
+          ])
+        || (exists(/databases/$(database)/documents/config/access)
+          && request.auth.token.email in get(/databases/$(database)/documents/config/access).data.emails)
+      );
+    }
+
+    // The access list itself: only the board can read or change it.
+    match /config/access {
+      allow read, write: if isBoard();
     }
 
     // Vendor reviews: anyone can read them (they show on the public site),

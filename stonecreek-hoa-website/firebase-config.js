@@ -9,13 +9,18 @@
    shows "Firebase not configured". */
 
 /* Board members allowed into the admin page (Google sign-in).
-   From Amani's 2026-10-09 roles doc. Jessica's address still uses her old
-   last name (jessinsims) — change it here and in firestore.rules if her
-   email changes. */
+   This is only the BOOTSTRAP list, used until the live list exists.
+   The live list lives in Firestore, document config/access, field emails,
+   and the board manages it from the Access section of the admin page —
+   that is the one place to add or remove access, no code change needed.
+   Amani edited the rules on main 2026-11-25 16:08: the board list is now
+   his two addresses plus the HOA account. Jessica and Keianna are NOT
+   on it — if they need admin access, add them from the admin page
+   (Access section) once the live list exists. */
 window.STONE_CREEK_BOARD_EMAILS = [
   "laurickamadi@gmail.com",
-  "jessinsims@gmail.com",
-  "keianna07@gmail.com"
+  "stonecreekhoa.stallings@gmail.com",
+  "Laurickamadi@zenithprotech.com"
 ];
 
 window.STONE_CREEK_FIREBASE_CONFIG = null;
