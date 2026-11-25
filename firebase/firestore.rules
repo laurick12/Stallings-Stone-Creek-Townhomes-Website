@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Vendor reviews: anyone can read them (they show on the public site),
+    // anyone can create one if it passes validation, nobody can edit or
+    // delete through the site. The board deletes abuse in the Firebase
+    // console, not through the site.
+    match /vendorReviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.resource.data.vendorId is string
+        && request.resource.data.vendorId.size() > 0
+        && request.resource.data.vendorId.size() < 100
+        && request.resource.data.rating is number
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.reviewText is string
+        && request.resource.data.reviewText.size() >= 10
+        && request.resource.data.reviewText.size() <= 1000
+        && request.resource.data.residentStreet is string
+        && request.resource.data.residentStreet.size() > 0
+        && request.resource.data.residentStreet.size() < 100;
+      allow update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
