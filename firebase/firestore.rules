@@ -16,7 +16,8 @@ service cloud.firestore {
           && request.auth.token.email in [
             "laurickamadi@gmail.com",
             "stonecreekhoa.stallings@gmail.com",
-            "Laurickamadi@zenithprotech.com",
+            "jessinsims@gmail.com",
+            "keianna07@gmail.com",
             "laurickamadi@zenithprotech.com"
           ])
         || (exists(/databases/$(database)/documents/config/access)
