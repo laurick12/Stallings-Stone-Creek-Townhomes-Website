@@ -550,36 +550,58 @@
 
   var firebaseDb = null;
 
+  function applyReviewsToVendors(all) {
+    var byVendor = {};
+    all.forEach(function (r) {
+      if (!r.vendorId || r.vendorId === "new") return;
+      (byVendor[r.vendorId] = byVendor[r.vendorId] || []).push(r);
+    });
+    vendorsList.forEach(function (v) {
+      var list = byVendor[v.id] || [];
+      if (!list.length) return;
+      var sum = 0;
+      list.forEach(function (r) { sum += Number(r.rating) || 0; });
+      v.vouches = list.length;
+      v.rating = Number((sum / list.length).toFixed(1));
+      v.tested = true;
+      v.reviews = list.map(function (r) {
+        var d = r.submittedAt && r.submittedAt.toDate ? r.submittedAt.toDate() : new Date(r.submittedAt || Date.now());
+        return {
+          author: "Verified Resident \u00b7 " + (r.residentStreet || ""),
+          date: d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+          rating: Number(r.rating) || 0,
+          text: r.reviewText || ""
+        };
+      });
+    });
+  }
+
   function initFirebaseReviews() {
-    if (!CONFIG.firebaseConfig || !window.firebase || !window.firebase.firestore) return;
+    var fbConfig = window.STONE_CREEK_FIREBASE_CONFIG || CONFIG.firebaseConfig;
+    if (!fbConfig || !window.firebase || !window.firebase.firestore) return;
     try {
-      if (!firebase.apps.length) firebase.initializeApp(CONFIG.firebaseConfig);
+      if (!firebase.apps.length) firebase.initializeApp(fbConfig);
       firebaseDb = firebase.firestore();
-      firebaseDb.collection("vendorReviews").orderBy("submittedAt", "desc").onSnapshot(function (snap) {
-        var byVendor = {};
+      /* Vendors live in Firestore once the board loads them from the admin
+         page. Until then (empty collection), vendors.json stays the source. */
+      firebaseDb.collection("vendors").onSnapshot(function (snap) {
+        if (snap.empty) return;
+        var fromDb = [];
         snap.forEach(function (doc) {
-          var r = doc.data() || {};
-          if (!r.vendorId || r.vendorId === "new") return;
-          (byVendor[r.vendorId] = byVendor[r.vendorId] || []).push(r);
+          var v = doc.data() || {};
+          v.id = doc.id;
+          v.reviews = [];
+          fromDb.push(v);
         });
-        vendorsList.forEach(function (v) {
-          var list = byVendor[v.id] || [];
-          if (!list.length) return;
-          var sum = 0;
-          list.forEach(function (r) { sum += Number(r.rating) || 0; });
-          v.vouches = list.length;
-          v.rating = Number((sum / list.length).toFixed(1));
-          v.tested = true;
-          v.reviews = list.map(function (r) {
-            var d = r.submittedAt && r.submittedAt.toDate ? r.submittedAt.toDate() : new Date(r.submittedAt || Date.now());
-            return {
-              author: "Verified Resident \u00b7 " + (r.residentStreet || ""),
-              date: d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-              rating: Number(r.rating) || 0,
-              text: r.reviewText || ""
-            };
-          });
-        });
+        vendorsList = fromDb;
+        applyReviewsToVendors(window.__latestReviews || []);
+        renderVendors();
+      });
+      firebaseDb.collection("vendorReviews").orderBy("submittedAt", "desc").onSnapshot(function (snap) {
+        var all = [];
+        snap.forEach(function (doc) { all.push(doc.data() || {}); });
+        window.__latestReviews = all;
+        applyReviewsToVendors(all);
         renderVendors();
       });
     } catch (err) {
@@ -639,18 +661,25 @@
            config is pasted in, a review is NOT recorded onsite, so say so
            and send the resident to the Google Form instead of faking it. */
         if (firebaseDb) {
-          statusEl.textContent = "Saving your review\u2026";
+          /* A new vendor recommendation goes to the board's pending queue,
+             not live. The board approves it on the admin page. */
+          var isNewVendor = !activeVendorId;
+          var collection = isNewVendor ? "vendorSuggestions" : "vendorReviews";
+          if (isNewVendor) payload.status = "pending";
+          statusEl.textContent = isNewVendor ? "Sending your recommendation to the board\u2026" : "Saving your review\u2026";
           payload.source = "stone-creek-site";
           payload.submittedAt = firebase.firestore.FieldValue.serverTimestamp();
-          firebaseDb.collection("vendorReviews").add(payload).then(function () {
-            statusEl.textContent = "Thank you, neighbor! Your review is live for Stone Creek.";
+          firebaseDb.collection(collection).add(payload).then(function () {
+            statusEl.textContent = isNewVendor
+              ? "Thank you! The board will check your recommendation before it goes live."
+              : "Thank you, neighbor! Your review is live for Stone Creek.";
             reviewForm.reset();
             setTimeout(function () {
               var dlg = document.getElementById("vendor-modal");
               if (dlg && dlg.open) dlg.close();
             }, 1400);
           }).catch(function () {
-            statusEl.textContent = "Could not save your review. Opening the Google Form to finish it there.";
+            statusEl.textContent = "Could not save. Opening the Google Form to finish it there.";
             window.open(CONFIG.googleVendorFormUrl, "_blank", "noopener");
           });
         } else {
