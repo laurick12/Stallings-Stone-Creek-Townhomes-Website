@@ -52,7 +52,7 @@
       } else if (code === "auth/operation-not-allowed") {
         statusEl.textContent = "Google sign-in is not turned on in Firebase yet. In the Firebase console: Authentication, Sign-in method, Google, Enable, Save.";
       } else if (code === "auth/unauthorized-domain") {
-        statusEl.textContent = "This site's address is not on Firebase's allowed list yet. In the Firebase console: Authentication, Settings, Authorized domains, add brave-meadow-0248d2f0f.7.azurestaticapps.net, Save.";
+        statusEl.textContent = "This site's address (" + window.location.hostname + ") is not on Firebase's allowed list yet. In the Firebase console: Authentication, Settings, Authorized domains, add " + window.location.hostname + ", Save.";
       } else if (code === "auth/cancelled-popup-request") {
         statusEl.textContent = "Sign-in was already in progress. Wait a moment and try again.";
       } else {
