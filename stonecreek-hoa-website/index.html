@@ -13,7 +13,7 @@
   <script>
     // Old single-page links (#vendors, #guide, #faq, ...) now live on their own pages.
     (function () {
-      var MAP = { vendors: "vendors.html", guide: "guide.html", "pavilion-guide": "guide.html#pavilion-guide", "parking-guide": "guide.html#parking-guide", resources: "resources.html", "arc-precheck": "resources.html#arc-precheck", "responsibility-matrix": "resources.html#responsibility-matrix", board: "resources.html#board", faq: "resources.html#faq" };
+      var MAP = { vendors: "vendors.html", guide: "guide.html", "pavilion-guide": "guide.html#pavilion-guide", "parking-guide": "guide.html#parking-guide", resources: "resources.html", "arc-precheck": "resources.html#arc-precheck", "responsibility-matrix": "resources.html#responsibility-matrix", faq: "resources.html#faq" };
       var h = (location.hash || "").slice(1);
       if (MAP[h]) location.replace(MAP[h]);
     })();
@@ -94,6 +94,24 @@
       </div>
     </section>
 
+<section class="section" id="board" aria-labelledby="board-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="section-label">Leadership</p>
+          <h2 id="board-title">Meet the Board</h2>
+          <p>Elected neighbors who volunteer their time to serve the Stone Creek community.</p>
+        </div>
+        <ol class="roster">
+          <li class="roster__row"><span class="roster__name">Jessica Rubenstein</span><span class="roster__role">President</span></li>
+          <li class="roster__row"><span class="roster__name">Laurick Amadi</span><span class="roster__role">Vice President</span></li>
+          <li class="roster__row"><span class="roster__name">Keianna Glover</span><span class="roster__role">Secretary</span></li>
+        </ol>
+        <div class="stack-actions">
+          <a class="btn btn--solid open-feedback-modal-btn" href="#">Send feedback to the Board</a>
+          <a class="btn btn--line" href="resources.html#board">Board details &amp; more ways to reach us</a>
+        </div>
+      </div>
+    </section>
 <section class="section" id="about" aria-labelledby="about-title">
       <div class="wrap">
         <div class="section-head">
