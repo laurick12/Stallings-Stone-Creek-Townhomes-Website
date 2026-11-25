@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Guide — Stone Creek Townhomes</title>
+  <meta name="description" content="Stone Creek Townhomes community guide: pavilion and playground reservations, parking map and rules, towing, and amenities." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+<div id="site-banner" class="banner" role="region" aria-label="Community announcements" hidden>
+    <div class="banner__inner">
+      <span class="banner__badge" id="banner-badge">Important</span>
+      <p class="banner__text" id="banner-text"></p>
+      <div class="banner__actions">
+        <button type="button" class="banner__details" id="banner-details-btn">Details</button>
+        <a class="banner__link" id="banner-link" href="guide.html" hidden>View</a>
+        <button type="button" class="banner__close" id="banner-close-btn" aria-label="Dismiss announcement">×</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="masthead" id="masthead">
+    <!-- Urgent pill: shows in the sticky header only when an Urgent banner was collapsed.
+         It is not a dismissal — the Urgent notice returns on the next page load until it is removed or expires. -->
+    <button type="button" id="urgent-pill" class="urgent-pill" hidden>
+      <span aria-hidden="true">⚠</span>
+      <span id="urgent-pill-text">1 Urgent Alert</span>
+      <span aria-hidden="true">— View</span>
+    </button>
+
+    <div class="masthead__inner">
+      <a class="wordmark" href="index.html" id="top">
+        <span class="wordmark__leaf" aria-hidden="true">❧</span>
+        <span>
+          <span class="wordmark__name">Stone&nbsp;Creek Townhomes</span>
+          <span class="wordmark__sub">Stallings, NC · HOA</span>
+        </span>
+      </a>
+
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span>Menu</span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="guide.html" aria-current="page">Guide</a>
+        <a href="vendors.html">Vendors</a>
+        <a href="resources.html">Resources &amp; Board</a>
+          <a href="admin.html">Board Admin</a>
+        <a class="site-nav__cta" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+<section class="section section--tint" id="guide" aria-labelledby="guide-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="section-label">Amenities &amp; Rules</p>
+          <h2 id="guide-title">Neighborhood Guide</h2>
+          <p>Reserve the pavilion in 4-hour blocks and share our visual community parking map before visitors arrive.</p>
+        </div>
+
+        <div class="guide-stack">
+          <!-- Card 1: Open by default for zero-click friction -->
+          <details class="amenity" open id="pavilion-guide">
+            <summary class="amenity__summary">
+              <span class="amenity__icon" aria-hidden="true">🏓</span>
+              <div>
+                <h3>Playground &amp; Pavilion Reservations</h3>
+                <span class="amenity__sub">4-hour private blocks · Automated email confirmation</span>
+              </div>
+              <span class="amenity__hint">Toggle</span>
+            </summary>
+
+            <div class="amenity__body">
+              <!-- 3-Step Visual Booking Tracker -->
+              <ol class="steps" aria-label="Booking steps">
+                <li class="steps__item is-current">
+                  <span class="steps__num">1</span>
+                  <div>
+                    <strong>Pick Date &amp; 4-Hr Block</strong>
+                    <span>Verify open time on the calendar</span>
+                  </div>
+                </li>
+                <li class="steps__item">
+                  <span class="steps__num">2</span>
+                  <div>
+                    <strong>Confirm Pavilion Rules</strong>
+                    <span>Complete quick on-site request</span>
+                  </div>
+                </li>
+                <li class="steps__item">
+                  <span class="steps__num">3</span>
+                  <div>
+                    <strong>Instant Confirmation</strong>
+                    <span>Automated calendar invite sent</span>
+                  </div>
+                </li>
+              </ol>
+
+              <div class="booking-split">
+                <!-- Interactive Quick Slot Picker -->
+                <div class="slot-picker">
+                  <h4>Quick Slot Selector</h4>
+                  <p class="slot-picker__hint">Choose your preferred date and 4-hour block below, then review the live calendar beside it to confirm no overlap.</p>
+
+                  <label class="field-label" for="booking-date">1. Select Event Date</label>
+                  <input type="date" id="booking-date" class="date-input" />
+
+                  <span class="field-label">2. Select 4-Hour Block</span>
+                  <div class="slot-grid" id="slot-grid" role="radiogroup" aria-label="4-hour reservation blocks">
+                    <button type="button" class="slot-btn is-selected" data-slot="9:00 AM – 1:00 PM (Morning)">
+                      <strong>Morning</strong>
+                      <span>9:00 AM – 1:00 PM</span>
+                    </button>
+                    <button type="button" class="slot-btn" data-slot="1:00 PM – 5:00 PM (Afternoon)">
+                      <strong>Afternoon</strong>
+                      <span>1:00 PM – 5:00 PM</span>
+                    </button>
+                    <button type="button" class="slot-btn" data-slot="5:00 PM – 9:00 PM (Evening)">
+                      <strong>Evening</strong>
+                      <span>5:00 PM – 9:00 PM</span>
+                    </button>
+                  </div>
+
+                  <ul class="rules-compact">
+                    <li>Bookings in 4-hour blocks</li>
+                    <li>Remove all trash immediately after event</li>
+                    <li>No glass containers allowed</li>
+                    <li>Stallings, NC noise ordinances apply</li>
+                  </ul>
+
+                  <div class="slot-picker__cta">
+                    <button type="button" class="btn btn--solid" id="open-booking-modal-btn">Reserve Selected Slot</button>
+                    <a class="btn btn--ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSdLltBb4FszXzhnI1puQQXvZTVWYF55tm94RujMw_ri-OU7nQ/viewform" target="_blank" rel="noopener">Direct Google Form ↗</a>
+                  </div>
+                </div>
+
+                <!-- Live Calendar -->
+                <div>
+                  <p class="field-label">Live Pavilion Availability Calendar</p>
+                  <div class="cal">
+                    <iframe class="cal__mobile" title="Pavilion availability — agenda view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=cddff0f13168ec83e47d5f45b4dec4bf0045d7529446484af0fc5bc22231020d%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
+                    <iframe class="cal__desktop" title="Pavilion availability — month view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=cddff0f13168ec83e47d5f45b4dec4bf0045d7529446484af0fc5bc22231020d%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Card 2: Guest Parking + Illustrated SVG No-Tow Map -->
+          <details class="amenity" open id="parking-guide">
+            <summary class="amenity__summary">
+              <span class="amenity__icon" aria-hidden="true">🚗</span>
+              <div>
+                <h3>Community Parking &amp; No-Tow Map</h3>
+                <span class="amenity__sub">Trout Lily Dr, Autumn Olive Dr &amp; Alley rules</span>
+              </div>
+              <span class="amenity__hint">Toggle</span>
+            </summary>
+
+            <div class="amenity__body">
+              <div class="parking-split">
+                <div>
+                  <ul>
+                    <li>No commercial vehicles, trailers, boats, or RVs at any time unless stored inside an enclosed garage (temporary deliveries/service and resident law enforcement vehicles exempt)</li>
+                    <li><strong>Trout Lily Drive:</strong> No parking permitted at any time (vehicles must use designated parking spaces)</li>
+                    <li><strong>Autumn Olive Drive:</strong> Parking allowed only in designated parking spaces on the right side (no street parking outside designated spaces)</li>
+                    <li><strong>Alleys:</strong> No parking, or storage permitted in any alley or at alleyway ends without exception (12 mph speed limit)</li>
+                    <li><strong>Towing &amp; Enforcement:</strong> N Style Towing / Lifted Towing (704-201-2704) conducts random patrols 7:00 PM – 7:00 AM (or tows upon HOA request); violators are towed at the owner's expense ($300 impound + $35/day storage)</li>
+                  </ul>
+                  <p class="amenity__warn">Violators subject to towing at owner's expense. See full CC&amp;Rs in the Resident Portal.</p>
+                  <button type="button" class="btn btn--ghost" id="copy-parking-link-btn">Copy Parking Link to Text Visitors</button>
+                </div>
+
+                <figure class="parking-map" aria-label="Stone Creek Guest Parking Schematic">
+                  <img src="parking-map.jpg" alt="Stone Creek parking map: Trout Lily Lane, no parking on either side (tow zone); Autumn Olive Lane, parking on the right side only; rear alleys, no parking (tow zone); Pavilion and Playground, 4-hour reserved blocks." width="810" height="525">
+                  <figcaption>Visual summary of Stone Creek parking rules. Always obey posted street signage.</figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<footer class="foot">
+    <div class="wrap">
+      <div class="foot__top">
+        <div>
+          <p class="foot__brand">Stone&nbsp;Creek Townhomes <span aria-hidden="true">❧</span></p>
+          <p class="foot__loc">Stallings, NC</p>
+        </div>
+        <nav class="foot__links" aria-label="Footer">
+          <a href="index.html#about">About</a>
+          <a href="vendors.html">Vendors</a>
+          <a href="#guide">Guide</a>
+          <a href="resources.html">Resources</a>
+          <a href="resources.html#board">Board</a>
+          <a href="resources.html#faq">FAQ</a>
+          <a href="admin.html">Board Admin</a>
+          <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
+        </nav>
+      </div>
+      <div class="foot__fine">
+        <p>© 2026 Stone Creek Townhomes HOA. All rights reserved. Site maintained by the Board of Directors.</p>
+        <p>Powered by <a class="foot__powered" href="https://zenithprotech.com" target="_blank" rel="noopener">ZenithProTech.com</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <dialog id="alert-modal" class="modal" aria-labelledby="alert-modal-title">
+    <div class="modal__box">
+      <div class="modal__head">
+        <span class="banner__badge" id="alert-modal-badge">Notice</span>
+        <button type="button" class="modal__close" data-close-modal aria-label="Close modal">×</button>
+      </div>
+      <h3 id="alert-modal-title"></h3>
+      <p id="alert-modal-body" class="modal__body"></p>
+      <div class="modal__foot">
+        <a id="alert-modal-cta" class="btn btn--solid" href="#guide">Take Action</a>
+        <button type="button" class="btn btn--ghost" data-close-modal>Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL 2: Vendor Reviews & Inline Resident Review Form -->
+  <dialog id="vendor-modal" class="modal" aria-labelledby="vendor-modal-title">
+    <div class="modal__box modal__box--wide">
+      <div class="modal__head">
+        <span class="vend__tag vend__tag--tested" id="vendor-modal-tag">★ Community Tested</span>
+        <button type="button" class="modal__close" data-close-modal aria-label="Close modal">×</button>
+      </div>
+      <h3 id="vendor-modal-title"></h3>
+      <p class="modal__meta" id="vendor-modal-meta"></p>
+      <p id="vendor-modal-summary" class="modal__body"></p>
+
+      <div class="modal__quicklinks" id="vendor-modal-links"></div>
+
+      <div class="modal__divider"><span>Neighbor Reviews</span></div>
+      <div id="vendor-modal-reviews" class="review-list"></div>
+
+      <form id="vendor-review-form" class="modal-form">
+        <h4 id="review-form-heading">Vouch for This Vendor</h4>
+        <div class="form-grid" id="new-vendor-fields" hidden>
+          <label>
+            <span>Company Name *</span>
+            <input type="text" name="vendorName" placeholder="e.g., Stallings Lawn &amp; Trim" />
+          </label>
+          <label>
+            <span>Trade Category *</span>
+            <select name="vendorCategory">
+              <option value="HVAC">HVAC</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Handyman">Handyman</option>
+              <option value="Cleaning">Cleaning</option>
+              <option value="Pest Control">Pest Control</option>
+              <option value="Landscaping">Landscaping</option>
+            </select>
+          </label>
+          <label>
+            <span>Phone Number *</span>
+            <input type="tel" name="vendorPhone" placeholder="(704) 555-0199" />
+          </label>
+          <label>
+            <span>Website (optional)</span>
+            <input type="url" name="vendorWebsite" placeholder="https://" />
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            <span>Your Street / Unit (for verification) *</span>
+            <input type="text" name="residentStreet" required placeholder="e.g., Trout Lily Dr" />
+          </label>
+          <label>
+            <span>Rating *</span>
+            <select name="rating" required>
+              <option value="5">★★★★★ (5/5 — Highly Recommend)</option>
+              <option value="4">★★★★☆ (4/5 — Solid Experience)</option>
+              <option value="3">★★★☆☆ (3/5 — Average)</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="form-full">
+          <span>What work did they do &amp; how was your experience? *</span>
+          <textarea name="reviewText" rows="3" required placeholder="Share helpful details for your neighbors…"></textarea>
+        </label>
+
+        <div class="modal__foot">
+          <button type="submit" class="btn btn--solid">Submit Resident Review</button>
+          <button type="button" class="btn btn--ghost" data-close-modal>Cancel</button>
+        </div>
+        <p class="form-status" id="vendor-review-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- MODAL 3: On-Site Pavilion Reservation Form -->
+  <dialog id="booking-modal" class="modal" aria-labelledby="booking-modal-title">
+    <div class="modal__box">
+      <div class="modal__head">
+        <span class="amenity__pill">Step 2 of 3 · Confirm Rules</span>
+        <button type="button" class="modal__close" data-close-modal aria-label="Close modal">×</button>
+      </div>
+      <h3 id="booking-modal-title">Request Pavilion Reservation</h3>
+      <p class="modal__meta" id="booking-summary-text"></p>
+
+      <form id="pavilion-booking-form" class="modal-form">
+        <input type="hidden" name="date" id="modal-booking-date" />
+        <input type="hidden" name="slot" id="modal-booking-slot" />
+
+        <div class="form-grid">
+          <label>
+            <span>Full Name *</span>
+            <input type="text" name="residentName" required placeholder="Jordan Taylor" />
+          </label>
+          <label>
+            <span>Townhome Address *</span>
+            <input type="text" name="unitAddress" required placeholder="123 Autumn Olive Dr" />
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            <span>Email for Confirmation *</span>
+            <input type="email" name="residentEmail" required placeholder="neighbor@example.com" />
+          </label>
+          <label>
+            <span>Event Type &amp; Est. Guests *</span>
+            <input type="text" name="eventDetails" required placeholder="Birthday gathering (~15 guests)" />
+          </label>
+          <label>
+            <span>Phone Number *</span>
+            <input type="tel" name="residentPhone" required placeholder="(704) 555-0199" />
+          </label>
+        </div>
+
+        <label class="checkbox-ack">
+          <input type="checkbox" name="rulesAccepted" required />
+          <span>I agree to the 4-hour block limit, immediate trash removal, no glass containers, and Stallings, NC noise ordinances.</span>
+        </label>
+
+        <div class="modal__foot">
+          <button type="submit" class="btn btn--solid">Submit Reservation Request</button>
+          <button type="button" class="btn btn--ghost" data-close-modal>Cancel</button>
+        </div>
+        <p class="form-status" id="booking-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
+
+  <!-- MODAL 4: Board Feedback Form -->
+  <dialog id="feedback-modal" class="modal" aria-labelledby="feedback-modal-title">
+    <div class="modal__box">
+      <div class="modal__head">
+        <span class="amenity__pill">Contact the Board</span>
+        <button type="button" class="modal__close" data-close-modal aria-label="Close modal">×</button>
+      </div>
+      <h3 id="feedback-modal-title">Submit Feedback</h3>
+      <p class="modal__meta">Your message will be sent directly to the volunteer HOA Board.</p>
+      <form id="board-feedback-form" class="modal-form">
+        <div class="form-grid">
+          <label><span>Name *</span><input type="text" name="residentName" required placeholder="Jordan Taylor" /></label>
+          <label><span>Unit Address *</span><input type="text" name="unitAddress" required placeholder="123 Trout Lily Dr" /></label>
+        </div>
+        <div class="form-grid">
+          <label><span>Email *</span><input type="email" name="residentEmail" required placeholder="neighbor@example.com" /></label>
+          <label><span>Topic *</span>
+            <select name="topic" required>
+              <option value="General Question">General Question</option>
+              <option value="Landscaping/Maintenance">Landscaping/Maintenance</option>
+              <option value="Rule Violation">Rule Violation Report</option>
+              <option value="Suggestion">Community Suggestion</option>
+            </select>
+          </label>
+        </div>
+        <label class="form-full">
+          <span>Message *</span>
+          <textarea name="feedbackMessage" rows="4" required placeholder="How can the Board help?"></textarea>
+        </label>
+        <div class="modal__foot">
+          <button type="submit" class="btn btn--solid">Send to Board</button>
+          <button type="button" class="btn btn--ghost" data-close-modal>Cancel</button>
+        </div>
+        <p class="form-status" id="feedback-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" defer></script>
+  <script src="firebase-config.js" defer></script>
+  <script src="app.js" defer></script>
+
+</body>
+</html>

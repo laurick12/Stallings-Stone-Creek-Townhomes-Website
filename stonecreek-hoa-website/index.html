@@ -10,19 +10,26 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Old single-page links (#vendors, #guide, #faq, ...) now live on their own pages.
+    (function () {
+      var MAP = { vendors: "vendors.html", guide: "guide.html", "pavilion-guide": "guide.html#pavilion-guide", "parking-guide": "guide.html#parking-guide", resources: "resources.html", "arc-precheck": "resources.html#arc-precheck", "responsibility-matrix": "resources.html#responsibility-matrix", board: "resources.html#board", faq: "resources.html#faq" };
+      var h = (location.hash || "").slice(1);
+      if (MAP[h]) location.replace(MAP[h]);
+    })();
+  </script>
+
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Top Community Announcement Band — above the sticky header, so it scrolls away.
-       Source of truth is announcements.json only. See ANNOUNCEMENTS.md to add/remove. -->
-  <div id="site-banner" class="banner" role="region" aria-label="Community announcements" hidden>
+<div id="site-banner" class="banner" role="region" aria-label="Community announcements" hidden>
     <div class="banner__inner">
       <span class="banner__badge" id="banner-badge">Important</span>
       <p class="banner__text" id="banner-text"></p>
       <div class="banner__actions">
         <button type="button" class="banner__details" id="banner-details-btn">Details</button>
-        <a class="banner__link" id="banner-link" href="#guide" hidden>View</a>
+        <a class="banner__link" id="banner-link" href="guide.html" hidden>View</a>
         <button type="button" class="banner__close" id="banner-close-btn" aria-label="Dismiss announcement">×</button>
       </div>
     </div>
@@ -52,12 +59,10 @@
       </button>
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#vendors">Vendors</a>
-        <a href="#guide">Guide</a>
-        <a href="#resources">Resources</a>
-        <a href="#board">Board</a>
-        <a href="#faq">FAQ</a>
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="guide.html">Guide</a>
+        <a href="vendors.html">Vendors</a>
+        <a href="resources.html">Resources &amp; Board</a>
           <a href="admin.html">Board Admin</a>
         <a class="site-nav__cta" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
       </nav>
@@ -66,30 +71,29 @@
 
   <main id="main">
 
-    <!-- HERO -->
-    <section class="hero" aria-labelledby="hero-title">
+<section class="hero" aria-labelledby="hero-title">
       <div class="hero__inner">
         <div>
-          <p class="eyebrow" id="hero-vitality">Stallings, NC · Established community</p>
           <h1 id="hero-title">Welcome<br /><em>home</em>, neighbor.</h1>
           <p class="hero__lede">The official one-stop hub for Stone Creek Townhomes residents — your board, community guidelines, pavilion booking, community parking map, and neighbors' vetted vendors.</p>
           <div class="hero__actions">
-            <a class="btn btn--cream" href="#guide">Book the pavilion</a>
-            <a class="btn btn--line" href="#vendors">Find a vetted vendor</a>
+            <a class="btn btn--cream" href="guide.html">Book the pavilion</a>
+            <a class="btn btn--line" href="vendors.html">Find a vetted vendor</a>
             <a class="btn btn--line" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
           </div>
         </div>
         <aside class="hero__aside" aria-label="Quick links">
           <ul class="quicklist">
             <li><a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener"><span>Portal login &amp; dues</span><span aria-hidden="true">↗</span></a></li>
-            <li><a href="#guide"><span>Reserve pavilion</span><span aria-hidden="true">↓</span></a></li>
-            <li><a href="#parking-guide"><span>Community parking map</span><span aria-hidden="true">↓</span></a></li>
-            <li><a href="#vendors"><span>Neighborhood vendors</span><span aria-hidden="true">↓</span></a></li>
+            <li><a href="guide.html"><span>Reserve pavilion</span><span aria-hidden="true">↓</span></a></li>
+            <li><a href="guide.html#parking-guide"><span>Community parking map</span><span aria-hidden="true">↓</span></a></li>
+            <li><a href="vendors.html"><span>Neighborhood vendors</span><span aria-hidden="true">↓</span></a></li>
             <li><a href="https://www.facebook.com/share/g/1DH7eA6xT4/" target="_blank" rel="noopener"><span>Facebook group</span><span aria-hidden="true">↗</span></a></li>
           </ul>
         </aside>
       </div>
     </section>
+
 <section class="section" id="about" aria-labelledby="about-title">
       <div class="wrap">
         <div class="section-head">
@@ -173,423 +177,23 @@
       </div>
     </section>
 
-<section class="section" id="vendors" aria-labelledby="vendors-title">
+<section class="section" aria-labelledby="explore-title">
       <div class="wrap">
         <div class="section-head">
-          <p class="section-label">Neighbors' Directory</p>
-          <h2 id="vendors-title">Local &amp; Vetted Vendors</h2>
-          <p>Search pros your Stone Creek neighbors have hired and reviewed — no external spreadsheets required.</p>
+          <p class="section-label">Explore</p>
+          <h2 id="explore-title">Everything else, one tap away</h2>
+          <p>Short pages, no endless scrolling.</p>
         </div>
-
-        <div class="vendor-controls" aria-label="Filter vendors">
-          <div class="vendor-controls__top">
-            <label class="search-field">
-              <span class="sr-only">Search vendors by name, trade, or keyword</span>
-              <input type="search" id="vendor-search" placeholder="Search plumber, HVAC, EV charger, drywall…" autocomplete="off" />
-            </label>
-
-            <label class="toggle-check">
-              <input type="checkbox" id="vendor-tested-only" />
-              <span>★ Community Tested Only</span>
-            </label>
-
-            <label class="sort-field">
-              <span class="sr-only">Sort vendors</span>
-              <select id="vendor-sort">
-                <option value="vouches">Sort: Most Vouched</option>
-                <option value="rating">Sort: Highest Rated</option>
-                <option value="name">Sort: A – Z</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="pill-row" id="vendor-categories" role="group" aria-label="Filter by trade category">
-            <button type="button" class="pill is-active" data-cat="All">All Trades</button>
-            <button type="button" class="pill" data-cat="HVAC">HVAC</button>
-            <button type="button" class="pill" data-cat="Plumbing">Plumbing</button>
-            <button type="button" class="pill" data-cat="Electrical">Electrical</button>
-            <button type="button" class="pill" data-cat="Handyman">Handyman</button>
-            <button type="button" class="pill" data-cat="Cleaning">Cleaning</button>
-            <button type="button" class="pill" data-cat="Pest Control">Pest Control</button>
-            <button type="button" class="pill" data-cat="Landscaping">Landscaping</button>
-          </div>
-
-          <p class="vendor-count" id="vendor-count" aria-live="polite"></p>
-        </div>
-
-        <div class="vendor-grid" id="vendor-grid"></div>
-
-        <div class="notice">
-          <strong>Used a great local pro or tried one of our Neighbor Leads?</strong>
-          Share a quick review on any vendor card above (or submit a brand-new pro) so neighbors can hire with confidence.
-          <br />
-          <div class="notice__actions">
-            <button type="button" class="btn btn--solid" id="open-new-vendor-btn">+ Recommend a New Vendor</button>
-            <a class="btn btn--ghost" href="https://forms.gle/7eLrH49JHgsBZvjb9" target="_blank" rel="noopener">Google Form Backup ↗</a>
-          </div>
-          <p class="archive-links">
-            Legacy Google Doc archives:
-            <a href="https://docs.google.com/document/d/1HfmQ_FhyghodeeVrdxvfaRZ8DzGl4CHb/edit?usp=sharing" target="_blank" rel="noopener">Recommended List Doc ↗</a> ·
-            <a href="https://docs.google.com/document/d/1SOKejOjc9m6xSPS6DTPztk3d2_LJNiUt/edit?usp=sharing" target="_blank" rel="noopener">Local Support Doc ↗</a>
-          </p>
-        </div>
-
-        <div class="disclaimer" role="note">
-          <p><strong>Disclaimer:</strong> These vendor lists are provided as a courtesy for informational purposes only. The HOA Board does not endorse, guarantee, or assume responsibility for the quality, pricing, or performance of any listed service provider. Residents are encouraged to conduct their own due diligence, obtain multiple quotes, and verify licensing and insurance before hiring.</p>
+        <div class="page-cards">
+          <a class="page-card" href="guide.html"><strong>Community Guide</strong><span>Pavilion booking, parking map and rules, playground.</span></a>
+          <a class="page-card" href="vendors.html"><strong>Local &amp; Vetted Vendors</strong><span>Neighbor-recommended pros, reviews, and recommendations.</span></a>
+          <a class="page-card" href="resources.html"><strong>Resources &amp; Board</strong><span>Portal, ARC pre-check, maintenance matrix, board, and FAQs.</span></a>
         </div>
       </div>
     </section>
-
-<section class="section section--tint" id="guide" aria-labelledby="guide-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Amenities &amp; Rules</p>
-          <h2 id="guide-title">Neighborhood Guide</h2>
-          <p>Reserve the pavilion in 4-hour blocks and share our visual community parking map before visitors arrive.</p>
-        </div>
-
-        <div class="guide-stack">
-          <!-- Card 1: Open by default for zero-click friction -->
-          <details class="amenity" open id="pavilion-guide">
-            <summary class="amenity__summary">
-              <span class="amenity__icon" aria-hidden="true">🏓</span>
-              <div>
-                <h3>Playground &amp; Pavilion Reservations</h3>
-                <span class="amenity__sub">4-hour private blocks · Automated email confirmation</span>
-              </div>
-              <span class="amenity__hint">Toggle</span>
-            </summary>
-
-            <div class="amenity__body">
-              <!-- 3-Step Visual Booking Tracker -->
-              <ol class="steps" aria-label="Booking steps">
-                <li class="steps__item is-current">
-                  <span class="steps__num">1</span>
-                  <div>
-                    <strong>Pick Date &amp; 4-Hr Block</strong>
-                    <span>Verify open time on the calendar</span>
-                  </div>
-                </li>
-                <li class="steps__item">
-                  <span class="steps__num">2</span>
-                  <div>
-                    <strong>Confirm Pavilion Rules</strong>
-                    <span>Complete quick on-site request</span>
-                  </div>
-                </li>
-                <li class="steps__item">
-                  <span class="steps__num">3</span>
-                  <div>
-                    <strong>Instant Confirmation</strong>
-                    <span>Automated calendar invite sent</span>
-                  </div>
-                </li>
-              </ol>
-
-              <div class="booking-split">
-                <!-- Interactive Quick Slot Picker -->
-                <div class="slot-picker">
-                  <h4>Quick Slot Selector</h4>
-                  <p class="slot-picker__hint">Choose your preferred date and 4-hour block below, then review the live calendar beside it to confirm no overlap.</p>
-
-                  <label class="field-label" for="booking-date">1. Select Event Date</label>
-                  <input type="date" id="booking-date" class="date-input" />
-
-                  <span class="field-label">2. Select 4-Hour Block</span>
-                  <div class="slot-grid" id="slot-grid" role="radiogroup" aria-label="4-hour reservation blocks">
-                    <button type="button" class="slot-btn is-selected" data-slot="9:00 AM – 1:00 PM (Morning)">
-                      <strong>Morning</strong>
-                      <span>9:00 AM – 1:00 PM</span>
-                    </button>
-                    <button type="button" class="slot-btn" data-slot="1:00 PM – 5:00 PM (Afternoon)">
-                      <strong>Afternoon</strong>
-                      <span>1:00 PM – 5:00 PM</span>
-                    </button>
-                    <button type="button" class="slot-btn" data-slot="5:00 PM – 9:00 PM (Evening)">
-                      <strong>Evening</strong>
-                      <span>5:00 PM – 9:00 PM</span>
-                    </button>
-                  </div>
-
-                  <ul class="rules-compact">
-                    <li>Bookings in 4-hour blocks</li>
-                    <li>Remove all trash immediately after event</li>
-                    <li>No glass containers allowed</li>
-                    <li>Stallings, NC noise ordinances apply</li>
-                  </ul>
-
-                  <div class="slot-picker__cta">
-                    <button type="button" class="btn btn--solid" id="open-booking-modal-btn">Reserve Selected Slot</button>
-                    <a class="btn btn--ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSdLltBb4FszXzhnI1puQQXvZTVWYF55tm94RujMw_ri-OU7nQ/viewform" target="_blank" rel="noopener">Direct Google Form ↗</a>
-                  </div>
-                </div>
-
-                <!-- Live Calendar -->
-                <div>
-                  <p class="field-label">Live Pavilion Availability Calendar</p>
-                  <div class="cal">
-                    <iframe class="cal__mobile" title="Pavilion availability — agenda view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=cddff0f13168ec83e47d5f45b4dec4bf0045d7529446484af0fc5bc22231020d%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
-                    <iframe class="cal__desktop" title="Pavilion availability — month view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=cddff0f13168ec83e47d5f45b4dec4bf0045d7529446484af0fc5bc22231020d%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-
-          <!-- Card 2: Guest Parking + Illustrated SVG No-Tow Map -->
-          <details class="amenity" open id="parking-guide">
-            <summary class="amenity__summary">
-              <span class="amenity__icon" aria-hidden="true">🚗</span>
-              <div>
-                <h3>Community Parking &amp; No-Tow Map</h3>
-                <span class="amenity__sub">Trout Lily Dr, Autumn Olive Dr &amp; Alley rules</span>
-              </div>
-              <span class="amenity__hint">Toggle</span>
-            </summary>
-
-            <div class="amenity__body">
-              <div class="parking-split">
-                <div>
-                  <ul>
-                    <li>No commercial vehicles, trailers, boats, or RVs overnight</li>
-                    <li><strong>Trout Lily Drive:</strong> No parking permitted at any time</li>
-                    <li><strong>Autumn Olive Drive:</strong> Parking allowed only on the right side</li>
-                    <li><strong>Alleys:</strong> No parking permitted in any alley without exception</li>
-                  </ul>
-                  <p class="amenity__warn">Violators subject to towing at owner's expense. See full CC&amp;Rs in the Resident Portal.</p>
-                  <button type="button" class="btn btn--ghost" id="copy-parking-link-btn">Copy Parking Link to Text Visitors</button>
-                </div>
-
-                <figure class="parking-map" aria-label="Stone Creek Guest Parking Schematic">
-                  <img src="parking-map.jpg" alt="Stone Creek parking map: Trout Lily Lane, no parking on either side (tow zone); Autumn Olive Lane, parking on the right side only; rear alleys, no parking (tow zone); Pavilion and Playground, 4-hour reserved blocks." width="810" height="525">
-                  <figcaption>Visual summary of Stone Creek parking rules. Always obey posted street signage.</figcaption>
-                </figure>
-              </div>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-<section class="section" id="resources" aria-labelledby="res-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Documents &amp; tools</p>
-          <h2 id="res-title">Community Resources</h2>
-          <p>Quick access to insurance certificates, exterior project guidelines, and maintenance coverage.</p>
-        </div>
-
-        <div class="res-grid res-grid--three">
-          <a class="res" href="https://resident.ciranet.com/accounts/documents" target="_blank" rel="noopener">
-            <span class="res__kicker">Gated Vault · CiraNet</span>
-            <span class="res__title">Master Policy &amp; Governing Docs</span>
-            <span class="res__body">Full Master Insurance Policy, deductible schedules, CC&amp;Rs, budgets, and meeting minutes.</span>
-            <span class="res__go" aria-hidden="true">Open CiraNet Documents ↗</span>
-          </a>
-
-          <div class="res res--static">
-            <span class="res__kicker">Refinancing &amp; Closing</span>
-            <span class="res__title">Need a Lender COI?</span>
-            <span class="res__body">Closing on a sale or refinancing? Request a Certificate of Insurance directly via CiraNet or email management with your lender's mortgagee clause.</span>
-            <div class="res__inline-actions">
-              <button type="button" class="copy-btn copy-btn--dark" data-copy="screekth@ciramail.com">Copy management email</button>
-              <a class="res__go" href="https://resident.ciranet.com/accounts/documents" target="_blank" rel="noopener">Portal ↗</a>
-            </div>
-          </div>
-
-          <a class="res" href="https://www.facebook.com/share/g/1DH7eA6xT4/" target="_blank" rel="noopener">
-            <span class="res__kicker">Off the record</span>
-            <span class="res__title">Community Social Group</span>
-            <span class="res__body">Casual neighborhood chat, lost-and-found pets, and local recommendations.</span>
-            <span class="res__go" aria-hidden="true">Join Facebook group ↗</span>
-          </a>
-        </div>
-
-        <!-- Interactive Tool 1: Do I Need ARC Approval? Pre-Check -->
-        <div class="tool-box" id="arc-precheck">
-          <div class="tool-box__head">
-            <p class="section-label">Before you modify</p>
-            <h3>Do I Need Architectural (ARC) Approval?</h3>
-            <p>Select a project below to see requirements before submitting your application in CiraNet (typical review: up to 30 days).</p>
-          </div>
-
-          <div class="pill-row" role="tablist" aria-label="Project types">
-            <button type="button" class="pill is-active" data-arc="paint">Exterior Paint / Front Door</button>
-            <button type="button" class="pill" data-arc="patio">Patio / Pavers / Privacy</button>
-            <button type="button" class="pill" data-arc="storm">Storm Door / Windows</button>
-            <button type="button" class="pill" data-arc="camera">Cameras / Satellite Dish</button>
-            <button type="button" class="pill" data-arc="landscape">Landscaping / Planters</button>
-          </div>
-
-          <div class="arc-result" id="arc-result" aria-live="polite"></div>
-        </div>
-
-        <!-- Interactive Tool 2: HOA vs. Homeowner Responsibility Matrix -->
-        <div class="tool-box" id="responsibility-matrix">
-          <div class="tool-box__head">
-            <p class="section-label">Who handles what?</p>
-            <h3>HOA vs. Homeowner Maintenance Matrix</h3>
-            <p>Quick reference so you know whether to submit a CiraNet work order or call a private vendor.</p>
-          </div>
-
-          <div class="pill-row" id="matrix-filters">
-            <button type="button" class="pill is-active" data-matrix="all">All Areas</button>
-            <button type="button" class="pill" data-matrix="exterior">Exterior &amp; Roof</button>
-            <button type="button" class="pill" data-matrix="systems">Plumbing &amp; HVAC</button>
-            <button type="button" class="pill" data-matrix="openings">Windows, Doors &amp; Garage</button>
-            <button type="button" class="pill" data-matrix="grounds">Driveway, Patio &amp; Grounds</button>
-          </div>
-
-          <div class="table-wrap">
-            <table class="matrix-table">
-              <thead>
-                <tr>
-                  <th>Component / Issue</th>
-                  <th>Responsible Party</th>
-                  <th>Notes &amp; Next Step</th>
-                </tr>
-              </thead>
-              <tbody id="matrix-body">
-                <tr data-cat="exterior">
-                  <td><strong>Roof Shingles &amp; Gutters</strong></td>
-                  <td><span class="owner-pill owner-pill--hoa">HOA Common</span></td>
-                  <td>Report exterior roof leaks or detached gutters to management via CiraNet.</td>
-                </tr>
-                <tr data-cat="exterior">
-                  <td><strong>Siding, Trim &amp; Exterior Brick</strong></td>
-                  <td><span class="owner-pill owner-pill--hoa">HOA Common</span></td>
-                  <td>Scheduled maintenance and exterior painting covered by HOA reserves.</td>
-                </tr>
-                <tr data-cat="openings">
-                  <td><strong>Windows, Screens &amp; Glass Seals</strong></td>
-                  <td><span class="owner-pill owner-pill--owner">Homeowner</span></td>
-                  <td>Fogged double-pane glass, screens, and locks are owner responsibility.</td>
-                </tr>
-                <tr data-cat="openings">
-                  <td><strong>Garage Door, Springs &amp; Opener</strong></td>
-                  <td><span class="owner-pill owner-pill--owner">Homeowner</span></td>
-                  <td>Mechanical opener, springs, and weather-stripping maintained by owner.</td>
-                </tr>
-                <tr data-cat="systems">
-                  <td><strong>HVAC, Heat Pump &amp; Water Heater</strong></td>
-                  <td><span class="owner-pill owner-pill--owner">Homeowner</span></td>
-                  <td>All interior mechanicals and attic air handlers — see vetted HVAC/Plumbing pros below.</td>
-                </tr>
-                <tr data-cat="systems">
-                  <td><strong>Interior Plumbing &amp; Main Shutoff</strong></td>
-                  <td><span class="owner-pill owner-pill--owner">Homeowner</span></td>
-                  <td>Pipes, fixtures, and PRV valves serving your individual townhome unit.</td>
-                </tr>
-                <tr data-cat="grounds">
-                  <td><strong>Front Lawn &amp; Common Mulch Beds</strong></td>
-                  <td><span class="owner-pill owner-pill--hoa">HOA Common</span></td>
-                  <td>Mowing, pine needles, and common irrigation maintained by HOA landscapers.</td>
-                </tr>
-                <tr data-cat="grounds">
-                  <td><strong>Rear Patio Slab &amp; Driveway Pad</strong></td>
-                  <td><span class="owner-pill owner-pill--owner">Homeowner</span></td>
-                  <td>Keep clean and free of oil stains; modifications require ARC approval first.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Sponsor slot — clearly labeled as advertising, not a Board endorsement -->
-        <aside class="sponsor" aria-label="Sponsored message">
-          <p class="sponsor__flag">★ Sponsored</p>
-          <div class="sponsor__body">
-            <div class="sponsor__left">
-              <img class="sponsor__logo" src="budgetwise-logo-hd.jpg" onerror="this.src='budgetwise-logo-hd.png'" alt="BudgetWise logo" width="60" height="60" loading="lazy" />
-              <div>
-                <p class="sponsor__title">Never miss HOA dues or home bills</p>
-                <p class="sponsor__desc">BudgetWise organizes your assessments, utilities, and mortgage in one visual calendar.</p>
-              </div>
-            </div>
-            <a class="btn btn--gold sponsor__cta" href="https://budgetwise.zenithprotech.com" target="_blank" rel="noopener sponsored">Build your Budget ↗</a>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-<section class="section section--tint" id="board" aria-labelledby="board-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="section-label">Leadership</p>
-          <h2 id="board-title">Meet the Board</h2>
-          <p>Elected neighbors who volunteer their time to serve the Stone Creek community.</p>
-        </div>
-
-        <ol class="roster">
-          <li class="roster__row"><span class="roster__name">Jessica Rubenstein</span><span class="roster__role">President</span></li>
-          <li class="roster__row"><span class="roster__name">Laurick Amadi</span><span class="roster__role">Vice President</span></li>
-          <li class="roster__row"><span class="roster__name">Keianna Glover</span><span class="roster__role">Secretary</span></li>
-        </ol>
-
-        <div class="rule-row"><span>Reach the Board</span></div>
-        <div class="stack-actions">
-          <button type="button" class="btn btn--solid open-feedback-modal-btn">Submit feedback to the Board</button>
-        </div>
-
-        <div class="alert" role="note">
-          <div>
-            <strong>Community concerns:</strong> For rule violations, common-area issues, or formal complaints, contact our management company at
-            <a href="mailto:screekth@ciramail.com">screekth@ciramail.com</a>.
-          </div>
-          <button type="button" class="copy-btn" data-copy="screekth@ciramail.com">Copy email</button>
-        </div>
-      </div>
-    </section>
-
-<section class="section section--tint" id="faq" aria-labelledby="faq-title">
-      <div class="wrap">
-        <div class="section-head section-head--center">
-          <p class="section-label">Common questions</p>
-          <h2 id="faq-title">Frequently Asked Questions</h2>
-          <p>Quick answers to the most common homeowner questions.</p>
-        </div>
-
-        <div class="faq-search-wrap">
-          <label class="search-field">
-            <span class="sr-only">Search frequently asked questions</span>
-            <input type="search" id="faq-search" placeholder="Filter FAQs by keyword (e.g., dues, ARC, pavilion, towing, insurance)…" autocomplete="off" />
-          </label>
-          <p class="faq-count" id="faq-count" aria-live="polite"></p>
-        </div>
-
-        <div class="faq" id="faq-list">
-          <details class="faq__item"><summary>What is the role of the HOA Board of Directors?</summary><div class="faq__answer">The Board of Directors is made up entirely of <strong>unpaid volunteers</strong> — your neighbors — who dedicate their personal time to manage community affairs on top of full-time jobs, families, and busy lives. Their responsibilities include overseeing the community budget, enforcing CC&amp;Rs, approving architectural requests, coordinating with vendors, and making decisions that protect property values. Please be patient and respectful — they are serving voluntarily with limited time.</div></details>
-          <details class="faq__item"><summary>What do my HOA fees cover?</summary><div class="faq__answer">Your monthly assessment covers common area maintenance and landscaping, exterior building insurance (master policy), playground and pavilion upkeep, street and parking lot maintenance, community lighting, and contributions to our reserve fund for future capital repairs.</div></details>
-          <details class="faq__item"><summary>How do I submit an Architectural Review (ARC) request?</summary><div class="faq__answer">All exterior modifications — including paint colors, fencing, patio additions, satellite dishes, and landscaping changes — require prior approval. Use our <a href="#arc-precheck">ARC Pre-Check tool</a> above, then log in to the <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal</a> and submit your ARC request with a description, photos, and relevant materials. The Board typically reviews within 30 days.</div></details>
-          <details class="faq__item"><summary>How do I reserve the playground or pavilion?</summary><div class="faq__answer">Use the <a href="#pavilion-guide">Playground &amp; Pavilion Reservations</a> section above. Pick your preferred date and 4-hour block, verify availability on the live calendar, and click “Reserve Selected Slot” to submit your request. You’ll receive an automated confirmation email if the slot is available.</div></details>
-          <details class="faq__item"><summary>Who do I contact for community concerns or rule violations?</summary><div class="faq__answer">For rule violations, common-area damage, noise complaints, or parking issues, contact our management company at <a href="mailto:screekth@ciramail.com">screekth@ciramail.com</a> <button type="button" class="copy-btn copy-btn--inline" data-copy="screekth@ciramail.com">Copy</button>. For general feedback, use the <a href="#" class="open-feedback-modal-btn">Board feedback form</a>. <strong>Please note:</strong> the HOA is not responsible for maintenance inside your individual unit — for in-home emergencies, contact a vendor from our <a href="#vendors">Vetted Vendors directory</a> directly.</div></details>
-          <details class="faq__item"><summary>How can I help the community?</summary><div class="faq__answer"><strong>✓ Pay your HOA dues on time.</strong> Late payments strain the budget and delay projects.<br /><br /><strong>✓ Respond promptly to violation notices.</strong> Each unresolved violation costs the HOA time and money in follow-ups, management fees, and potential legal action — expenses that come out of everyone’s assessments.<br /><br /><strong>✓ Maintain your property.</strong> Keep your lawn trimmed, trash bins stored, and exterior clean.<br /><br /><strong>✓ Follow parking rules.</strong> Use your garage and driveway first.<br /><br /><strong>✓ Attend community meetings.</strong> Your voice matters.<br /><br /><strong>✓ Report issues early.</strong> Let the management company know before small problems become big ones.<br /><br /><strong>✓ Be kind to volunteers.</strong> Constructive feedback is welcome; hostility is not.</div></details>
-          <details class="faq__item"><summary>How do I get involved or join the Board?</summary><div class="faq__answer">Board elections are held at the Annual Meeting each year. Any homeowner in good standing is eligible to run. Submit your interest through the <a href="#" class="open-feedback-modal-btn">Board feedback form</a> — we welcome community involvement!</div></details>
-          <details class="faq__item"><summary>What happens if I don’t pay my HOA dues?</summary><div class="faq__answer">Past-due accounts are subject to late fees. Continued delinquency may result in collections and ultimately a lien on your property. If you’re experiencing hardship, contact the management company early to discuss arrangements.</div></details>
-          <details class="faq__item"><summary>Where can I find the Master Insurance Policy, CC&amp;Rs, bylaws, and meeting minutes?</summary><div class="faq__answer">All sensitive governing and insurance documents are securely stored in the <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal</a>. Log in and navigate to the Documents section. If you only need a lender Certificate of Insurance (COI), see the quick instructions in <a href="#resources">Community Resources</a>.</div></details>
-        </div>
-      </div>
-    </section>
-
-
-
-    
-
-    
-    
-
-
-    
-
-<!-- RESOURCES: Document Security Hybrid + ARC Pre-Check + Responsibility Matrix -->
-    
-
-<!-- NEIGHBORHOOD GUIDE: Streamlined Pavilion Booking + Illustrated Parking Map -->
-    
-
   </main>
 
-  <footer class="foot">
+<footer class="foot">
     <div class="wrap">
       <div class="foot__top">
         <div>
@@ -598,11 +202,11 @@
         </div>
         <nav class="foot__links" aria-label="Footer">
           <a href="#about">About</a>
-          <a href="#vendors">Vendors</a>
-          <a href="#guide">Guide</a>
-          <a href="#resources">Resources</a>
-          <a href="#board">Board</a>
-          <a href="#faq">FAQ</a>
+          <a href="vendors.html">Vendors</a>
+          <a href="guide.html">Guide</a>
+          <a href="resources.html">Resources</a>
+          <a href="resources.html#board">Board</a>
+          <a href="resources.html#faq">FAQ</a>
           <a href="admin.html">Board Admin</a>
           <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
         </nav>
@@ -614,7 +218,6 @@
     </div>
   </footer>
 
-  <!-- MODAL 1: Announcement Full Details -->
   <dialog id="alert-modal" class="modal" aria-labelledby="alert-modal-title">
     <div class="modal__box">
       <div class="modal__head">
@@ -624,7 +227,7 @@
       <h3 id="alert-modal-title"></h3>
       <p id="alert-modal-body" class="modal__body"></p>
       <div class="modal__foot">
-        <a id="alert-modal-cta" class="btn btn--solid" href="#guide">Take Action</a>
+        <a id="alert-modal-cta" class="btn btn--solid" href="guide.html">Take Action</a>
         <button type="button" class="btn btn--ghost" data-close-modal>Close</button>
       </div>
     </div>

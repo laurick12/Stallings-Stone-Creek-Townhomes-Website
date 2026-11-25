@@ -164,7 +164,13 @@
     linkEl.hidden = true;
     linkEl.removeAttribute("target");
     if (current.actionHref && current.actionLabel) {
-      linkEl.href = current.actionHref;
+      var PAGE_OF = { about: "index.html", vendors: "vendors.html", guide: "guide.html", "pavilion-guide": "guide.html#pavilion-guide", "parking-guide": "guide.html#parking-guide", resources: "resources.html", "arc-precheck": "resources.html#arc-precheck", "responsibility-matrix": "resources.html#responsibility-matrix", board: "resources.html#board", faq: "resources.html#faq" };
+      var href = current.actionHref;
+      if (href.charAt(0) === "#") {
+        var key = href.slice(1);
+        href = PAGE_OF[key] || href;
+      }
+      linkEl.href = href;
       linkEl.textContent = current.actionLabel;
       linkEl.hidden = false;
       if (/^https?:/.test(current.actionHref)) {
@@ -612,12 +618,6 @@
   function initVendors(data) {
     vendorsList = Array.isArray(data) ? data : [];
     initFirebaseReviews();
-    var vettedCount = vendorsList.filter(function (v) { return v.tested; }).length;
-    var vitality = document.getElementById("hero-vitality");
-    if (vitality) {
-      var monthYear = new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" });
-      vitality.textContent = "Stallings, NC · Updated " + monthYear + " · " + vettedCount + " Vetted Vendors";
-    }
 
     var searchInput = document.getElementById("vendor-search");
     var testedCheck = document.getElementById("vendor-tested-only");

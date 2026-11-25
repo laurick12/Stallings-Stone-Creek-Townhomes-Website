@@ -6,7 +6,7 @@
     "_severity": "urgent = water shutoff, towing, safety, pavilion closed today. Cannot be fully dismissed - X collapses it to a '1 Urgent Alert' pill. important = annual meeting, dues change, election. info = maintenance next week, new vendor, trash delay. Important/info CAN be dismissed on that device.",
     "_title": "Keep the title under 80 characters - it is the one line on the banner. Put the full text in details.",
     "_expiresAt": "Always set one, Eastern time, e.g. 2026-12-31T23:59:59-05:00. After that date/time the banner hides itself automatically.",
-    "_template": "{ \"id\": \"2026-12-your-topic\", \"severity\": \"important\", \"title\": \"Short headline under 80 characters.\", \"details\": \"Full text shown when someone taps Details - one or two sentences, plus what to do.\", \"actionLabel\": \"View Parking Map\", \"actionHref\": \"#guide\", \"expiresAt\": \"2026-12-31T23:59:59-05:00\" }"
+    "_template": "{ \"id\": \"2026-12-your-topic\", \"severity\": \"important\", \"title\": \"Short headline under 80 characters.\", \"details\": \"Full text shown when someone taps Details - one or two sentences, plus what to do.\", \"actionLabel\": \"View Parking Map\", \"actionHref\": \"guide.html\", \"expiresAt\": \"2026-12-31T23:59:59-05:00\" }"
   },
   {
     "id": "2026-11-winter-irrigation",
@@ -14,7 +14,7 @@
     "title": "Common-area irrigation winterization & mulch refresh scheduled Nov 30 – Dec 2.",
     "details": "Landscaping crews will blow out common-area irrigation lines and refresh pine-needle beds along Trout Lily Drive and Autumn Olive Drive between 8:00 AM and 4:00 PM. Please keep alleyways and guest parking aprons clear during work hours.",
     "actionLabel": "View Parking Map",
-    "actionHref": "#guide",
+    "actionHref": "guide.html",
     "expiresAt": "2026-11-23T10:46:59-05:00"
   }
 ]

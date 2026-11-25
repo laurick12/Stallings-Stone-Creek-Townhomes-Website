@@ -97,6 +97,7 @@
       signinEl.style.display = "none";
       appEl.style.display = "";
       document.getElementById("admin-who").textContent = "Signed in as " + user.email;
+      initAdminLists();
       loadAll();
       loadAccess(allowed);
     }).catch(function () {
@@ -137,6 +138,121 @@
     });
   }
 
+  /* Friendly as the data grows: keep every list in memory, render only
+     what matches the search, 20 reviews at a time with Show more. */
+  var allReviews = [];
+  var allVendors = [];
+  var reviewsShown = 20;
+  var reviewsQuery = "";
+  var vendorsQuery = "";
+
+  function renderReviews() {
+    var list = document.getElementById("reviews-list");
+    var countEl = document.getElementById("reviews-count");
+    var moreBtn = document.getElementById("reviews-more");
+    var q = reviewsQuery.trim().toLowerCase();
+    var filtered = allReviews.filter(function (item) {
+      if (!q) return true;
+      var r = item.data;
+      var hay = [r.vendorName, r.vendorId, r.residentStreet, r.reviewText].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+    countEl.textContent = "(" + filtered.length + " review" + (filtered.length === 1 ? "" : "s") + ")";
+    if (!filtered.length) { list.innerHTML = "<p class='empty'>" + (q ? "No reviews match that search." : "No reviews yet.") + "</p>"; moreBtn.style.display = "none"; return; }
+    var shown = filtered.slice(0, reviewsShown);
+    list.innerHTML = "";
+    shown.forEach(function (item) {
+      var r = item.data;
+      var div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = "<strong>" + esc(r.vendorName || r.vendorId || "") + "</strong> · ★ " + Number(r.rating || 0) + "/5 · " + fmtDate(r.submittedAt) +
+        "<div class='meta'>" + esc(r.residentStreet || "") + "</div><p>“" + esc(r.reviewText || "") + "”</p>";
+      var del = document.createElement("button");
+      del.className = "danger"; del.textContent = "Delete review";
+      del.addEventListener("click", function () {
+        if (!confirm("Delete this review from the site?")) return;
+        del.disabled = true;
+        db.collection("vendorReviews").doc(item.id).delete().catch(function () { del.disabled = false; alert("Could not delete. Try again."); });
+      });
+      div.appendChild(del);
+      list.appendChild(div);
+    });
+    moreBtn.style.display = filtered.length > reviewsShown ? "" : "none";
+    moreBtn.textContent = "Show more reviews (" + (filtered.length - reviewsShown) + " more)";
+  }
+
+  function renderVendorsAdmin() {
+    var list = document.getElementById("vendors-list");
+    var countEl = document.getElementById("vendors-count");
+    var q = vendorsQuery.trim().toLowerCase();
+    var filtered = allVendors.filter(function (item) {
+      if (!q) return true;
+      var v = item.data;
+      var hay = [v.name, v.category, v.phone, v.summary].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+    countEl.textContent = "(" + filtered.length + " vendor" + (filtered.length === 1 ? "" : "s") + ")";
+    if (!filtered.length) { list.innerHTML = "<p class='empty'>" + (q ? "No vendors match that search." : "No vendors yet.") + "</p>"; return; }
+    list.innerHTML = "";
+    filtered.forEach(function (item) {
+      var v = item.data;
+      var div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = "<strong>" + esc(v.name) + "</strong> · " + esc(v.category || "") +
+        "<div class='meta'>" + esc(v.phone || "") + " · " + (v.tested ? "Community Tested" : "Neighbor Lead") + "</div>";
+      var del = document.createElement("button");
+      del.className = "danger"; del.textContent = "Remove vendor";
+      del.addEventListener("click", function () {
+        if (!confirm("Remove " + v.name + " from the directory?")) return;
+        del.disabled = true;
+        db.collection("vendors").doc(item.id).delete().catch(function () { del.disabled = false; alert("Could not remove. Try again."); });
+      });
+      div.appendChild(del);
+      list.appendChild(div);
+    });
+  }
+
+  function initAdminLists() {
+    document.getElementById("reviews-search").addEventListener("input", function (e) {
+      reviewsQuery = e.target.value; reviewsShown = 20; renderReviews();
+    });
+    document.getElementById("reviews-more").addEventListener("click", function () {
+      reviewsShown += 20; renderReviews();
+    });
+    document.getElementById("vendors-search").addEventListener("input", function (e) {
+      vendorsQuery = e.target.value; renderVendorsAdmin();
+    });
+    document.getElementById("add-vendor-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var statusEl = document.getElementById("add-vendor-status");
+      var name = document.getElementById("av-name").value.trim();
+      if (!name) { statusEl.textContent = "Enter the business name."; return; }
+      var id = slug(name);
+      var vendor = {
+        id: id,
+        name: name,
+        category: document.getElementById("av-category").value,
+        tested: document.getElementById("av-tested").checked,
+        rating: 0, vouches: 0,
+        phone: document.getElementById("av-phone").value.trim(),
+        website: document.getElementById("av-website").value.trim(),
+        summary: document.getElementById("av-summary").value.trim(),
+        verifiedNotes: document.getElementById("av-notes").value.trim() || "Board Added"
+      };
+      statusEl.textContent = "Adding " + name + "\u2026";
+      db.collection("vendors").doc(id).get().then(function (snap) {
+        if (snap.exists) { statusEl.textContent = "A vendor called " + name + " is already in the directory."; return null; }
+        return db.collection("vendors").doc(id).set(vendor);
+      }).then(function (done) {
+        if (done === null) return;
+        statusEl.textContent = name + " is live on the directory now.";
+        document.getElementById("add-vendor-form").reset();
+      }).catch(function () {
+        statusEl.textContent = "Could not add the vendor. Try again.";
+      });
+    });
+  }
+
   function loadAll() {
     db.collection("vendorSuggestions").where("status", "==", "pending").orderBy("submittedAt", "desc").onSnapshot(function (snap) {
       var list = document.getElementById("pending-list");
@@ -164,26 +280,10 @@
         list.appendChild(div);
       });
     });
-    db.collection("vendorReviews").orderBy("submittedAt", "desc").limit(100).onSnapshot(function (snap) {
-      var list = document.getElementById("reviews-list");
-      if (snap.empty) { list.innerHTML = "<p class='empty'>No reviews yet.</p>"; return; }
-      list.innerHTML = "";
-      snap.forEach(function (doc) {
-        var r = doc.data() || {};
-        var div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = "<strong>" + esc(r.vendorName || r.vendorId || "") + "</strong> · ★ " + Number(r.rating || 0) + "/5 · " + fmtDate(r.submittedAt) +
-          "<div class='meta'>" + esc(r.residentStreet || "") + "</div><p>“" + esc(r.reviewText || "") + "”</p>";
-        var del = document.createElement("button");
-        del.className = "danger"; del.textContent = "Delete review";
-        del.addEventListener("click", function () {
-          if (!confirm("Delete this review from the site?")) return;
-          del.disabled = true;
-          db.collection("vendorReviews").doc(doc.id).delete().catch(function () { del.disabled = false; alert("Could not delete. Try again."); });
-        });
-        div.appendChild(del);
-        list.appendChild(div);
-      });
+    db.collection("vendorReviews").orderBy("submittedAt", "desc").limit(500).onSnapshot(function (snap) {
+      allReviews = [];
+      snap.forEach(function (doc) { allReviews.push({ id: doc.id, data: doc.data() || {} }); });
+      renderReviews();
     });
     db.collection("vendors").orderBy("name").onSnapshot(function (snap) {
       var list = document.getElementById("vendors-list");
@@ -194,23 +294,9 @@
         return;
       }
       seedCard.style.display = "none";
-      list.innerHTML = "";
-      snap.forEach(function (doc) {
-        var v = doc.data() || {};
-        var div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = "<strong>" + esc(v.name) + "</strong> · " + esc(v.category || "") +
-          "<div class='meta'>" + esc(v.phone || "") + " · " + (v.tested ? "Community Tested" : "Neighbor Lead") + "</div>";
-        var del = document.createElement("button");
-        del.className = "danger"; del.textContent = "Remove vendor";
-        del.addEventListener("click", function () {
-          if (!confirm("Remove " + v.name + " from the directory?")) return;
-          del.disabled = true;
-          db.collection("vendors").doc(doc.id).delete().catch(function () { del.disabled = false; alert("Could not remove. Try again."); });
-        });
-        div.appendChild(del);
-        list.appendChild(div);
-      });
+      allVendors = [];
+      snap.forEach(function (doc) { allVendors.push({ id: doc.id, data: doc.data() || {} }); });
+      renderVendorsAdmin();
     });
   }
 
