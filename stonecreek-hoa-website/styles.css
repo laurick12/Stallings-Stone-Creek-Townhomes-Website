@@ -432,7 +432,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .parking-split li::before{content:"→"; position:absolute; left:0; color:var(--moss); font-weight:700;}
 .amenity__warn{margin:1rem 0 1.1rem; padding:.8rem 1rem; font-size:.88rem; font-weight:600; color:#6b2c14; background:#fbeee6; border-left:3px solid var(--clay);}
 .parking-map{margin:0; background:var(--cream); padding:.85rem; border:1px solid rgba(34,30,26,.16);}
-.parking-map svg{width:100%; height:auto; display:block;}
+.parking-map svg, .parking-map img{width:100%; height:auto; display:block;}
 .parking-map figcaption{font-size:.8rem; color:var(--body-dim); margin-top:.5rem; text-align:center;}
 .amenity__pill{display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.03em; background:var(--sage); color:var(--forest); padding:.32rem .75rem; border-radius:2px;}
 
