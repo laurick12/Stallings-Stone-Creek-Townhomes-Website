@@ -54,7 +54,6 @@
         <a href="guide.html" aria-current="page">Guide</a>
         <a href="vendors.html">Vendors</a>
         <a href="resources.html">Resources &amp; Board</a>
-          <a href="admin.html">Board Admin</a>
         <a class="site-nav__cta" href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
       </nav>
     </div>
@@ -67,12 +66,60 @@
         <div class="section-head">
           <p class="section-label">Amenities &amp; Rules</p>
           <h2 id="guide-title">Neighborhood Guide</h2>
-          <p>Reserve the pavilion in 4-hour blocks and share our visual community parking map before visitors arrive.</p>
+          <p>Everything about living in Stone Creek — what’s happening, where to park, and how to book the pavilion.</p>
         </div>
 
         <div class="guide-stack">
-          <!-- Card 1: Open by default for zero-click friction -->
-          <details class="amenity" open id="pavilion-guide">
+<details class="amenity" open id="community-calendar">
+            <summary class="amenity__summary">
+              <span class="amenity__icon" aria-hidden="true">📅</span>
+              <div>
+                <h3>Community Calendar</h3>
+                <span class="amenity__sub">Important dates, trash, pest control, projects &amp; city events</span>
+              </div>
+              <span class="amenity__hint">Toggle</span>
+            </summary>
+
+            <div class="amenity__body">
+              <p>Everything happening in Stone Creek, in one place: board dates, routine service, trash schedule, pest control, projects, and events in the city. This calendar is only for dates — pavilion bookings still run on the separate pavilion calendar above, and nothing here changes a booking.</p>
+              <div class="cal">
+                <iframe class="cal__mobile" title="Community calendar — upcoming dates" loading="lazy" src="https://calendar.google.com/calendar/embed?src=stonecreekhoa.stallings%40gmail.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
+                <iframe class="cal__desktop" title="Community calendar — month view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=stonecreekhoa.stallings%40gmail.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
+              </div>
+            </div>
+          </details>
+<details class="amenity" open id="parking-guide">
+            <summary class="amenity__summary">
+              <span class="amenity__icon" aria-hidden="true">🚗</span>
+              <div>
+                <h3>Community Parking &amp; No-Tow Map</h3>
+                <span class="amenity__sub">Trout Lily Dr, Autumn Olive Dr &amp; Alley rules</span>
+              </div>
+              <span class="amenity__hint">Toggle</span>
+            </summary>
+
+            <div class="amenity__body">
+              <div class="parking-split">
+                <div>
+                  <ul>
+                    <li>No commercial vehicles, trailers, boats, or RVs at any time unless stored inside an enclosed garage (temporary deliveries/service and resident law enforcement vehicles exempt)</li>
+                    <li><strong>Trout Lily Drive:</strong> No parking permitted at any time (vehicles must use designated parking spaces)</li>
+                    <li><strong>Autumn Olive Drive:</strong> Parking allowed only in designated parking spaces on the right side (no street parking outside designated spaces)</li>
+                    <li><strong>Alleys:</strong> No parking, or storage permitted in any alley or at alleyway ends without exception (12 mph speed limit)</li>
+                    <li><strong>Towing &amp; Enforcement:</strong> N Style Towing / Lifted Towing (704-201-2704) conducts random patrols 7:00 PM – 7:00 AM (or tows upon HOA request); violators are towed at the owner's expense ($300 impound + $35/day storage)</li>
+                  </ul>
+                  <p class="amenity__warn">Violators subject to towing at owner's expense. See full CC&amp;Rs in the Resident Portal.</p>
+                  <button type="button" class="btn btn--ghost" id="copy-parking-link-btn">Copy Parking Link to Text Visitors</button>
+                </div>
+
+                <figure class="parking-map" aria-label="Stone Creek Guest Parking Schematic">
+                  <img src="parking-map.jpg" alt="Stone Creek parking map: Trout Lily Lane, no parking on either side (tow zone); Autumn Olive Lane, parking on the right side only; rear alleys, no parking (tow zone); Pavilion and Playground, 4-hour reserved blocks." width="810" height="525">
+                  <figcaption>Visual summary of Stone Creek parking rules. Always obey posted street signage.</figcaption>
+                </figure>
+              </div>
+            </div>
+          </details>
+<details class="amenity" id="pavilion-guide">
             <summary class="amenity__summary">
               <span class="amenity__icon" aria-hidden="true">🏓</span>
               <div>
@@ -157,57 +204,6 @@
               </div>
             </div>
           </details>
-
-          <!-- Card 2: Guest Parking + Illustrated SVG No-Tow Map -->
-          <details class="amenity" open id="parking-guide">
-            <summary class="amenity__summary">
-              <span class="amenity__icon" aria-hidden="true">🚗</span>
-              <div>
-                <h3>Community Parking &amp; No-Tow Map</h3>
-                <span class="amenity__sub">Trout Lily Dr, Autumn Olive Dr &amp; Alley rules</span>
-              </div>
-              <span class="amenity__hint">Toggle</span>
-            </summary>
-
-            <div class="amenity__body">
-              <div class="parking-split">
-                <div>
-                  <ul>
-                    <li>No commercial vehicles, trailers, boats, or RVs at any time unless stored inside an enclosed garage (temporary deliveries/service and resident law enforcement vehicles exempt)</li>
-                    <li><strong>Trout Lily Drive:</strong> No parking permitted at any time (vehicles must use designated parking spaces)</li>
-                    <li><strong>Autumn Olive Drive:</strong> Parking allowed only in designated parking spaces on the right side (no street parking outside designated spaces)</li>
-                    <li><strong>Alleys:</strong> No parking, or storage permitted in any alley or at alleyway ends without exception (12 mph speed limit)</li>
-                    <li><strong>Towing &amp; Enforcement:</strong> N Style Towing / Lifted Towing (704-201-2704) conducts random patrols 7:00 PM – 7:00 AM (or tows upon HOA request); violators are towed at the owner's expense ($300 impound + $35/day storage)</li>
-                  </ul>
-                  <p class="amenity__warn">Violators subject to towing at owner's expense. See full CC&amp;Rs in the Resident Portal.</p>
-                  <button type="button" class="btn btn--ghost" id="copy-parking-link-btn">Copy Parking Link to Text Visitors</button>
-                </div>
-
-                <figure class="parking-map" aria-label="Stone Creek Guest Parking Schematic">
-                  <img src="parking-map.jpg" alt="Stone Creek parking map: Trout Lily Lane, no parking on either side (tow zone); Autumn Olive Lane, parking on the right side only; rear alleys, no parking (tow zone); Pavilion and Playground, 4-hour reserved blocks." width="810" height="525">
-                  <figcaption>Visual summary of Stone Creek parking rules. Always obey posted street signage.</figcaption>
-                </figure>
-              </div>
-            </div>
-          </details>
-          <details class="amenity" open id="community-calendar">
-            <summary class="amenity__summary">
-              <span class="amenity__icon" aria-hidden="true">📅</span>
-              <div>
-                <h3>Community Calendar</h3>
-                <span class="amenity__sub">Important dates, trash, pest control, projects &amp; city events</span>
-              </div>
-              <span class="amenity__hint">Toggle</span>
-            </summary>
-
-            <div class="amenity__body">
-              <p>Everything happening in Stone Creek, in one place: board dates, routine service, trash schedule, pest control, projects, and events in the city. This calendar is only for dates — pavilion bookings still run on the separate pavilion calendar above, and nothing here changes a booking.</p>
-              <div class="cal">
-                <iframe class="cal__mobile" title="Community calendar — upcoming dates" loading="lazy" src="https://calendar.google.com/calendar/embed?src=stonecreekhoa.stallings%40gmail.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
-                <iframe class="cal__desktop" title="Community calendar — month view" loading="lazy" src="https://calendar.google.com/calendar/embed?src=stonecreekhoa.stallings%40gmail.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;showTabs=0"></iframe>
-              </div>
-            </div>
-          </details>
         </div>
       </div>
     </section>
@@ -227,6 +223,8 @@
           <a href="resources.html">Resources</a>
           <a href="resources.html#board">Board</a>
           <a href="resources.html#faq">FAQ</a>
+          <a href="#" class="open-feedback-modal-btn">Contact us</a>
+          <a href="mailto:stonecreekhoa.stallings@gmail.com">stonecreekhoa.stallings@gmail.com</a>
           <a href="admin.html">Board Admin</a>
           <a href="https://resident.ciranet.com/user/login?returnUrl=%2Fhome" target="_blank" rel="noopener">Resident Portal ↗</a>
         </nav>

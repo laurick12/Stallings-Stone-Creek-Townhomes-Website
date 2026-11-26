@@ -278,6 +278,13 @@
     });
   });
 
+  /* Deep links to a folded Guide section open it: a visitor following
+     "Book the pavilion" must land on the booking form, not a closed card. */
+  (function () {
+    var target = document.getElementById((location.hash || "").slice(1));
+    if (target && target.tagName === "DETAILS") target.open = true;
+  })();
+
   var copyParkingBtn = document.getElementById("copy-parking-link-btn");
   if (copyParkingBtn) {
     copyParkingBtn.addEventListener("click", function () {
